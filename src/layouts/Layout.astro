@@ -15,7 +15,9 @@ const { title, description = "JXX Design - Graffiti Artist Portfolio" } = Astro.
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Bangers&family=Creepster&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <style>
       /* Custom animations and effects */
       @keyframes float {
@@ -67,14 +69,14 @@ const { title, description = "JXX Design - Graffiti Artist Portfolio" } = Astro.
                      9px 9px 0px rgba(0, 255, 255, 0.3);
       }
       
-      .neon-glow {
-        text-shadow: 0 0 10px currentColor,
-                     0 0 20px currentColor,
-                     0 0 30px currentColor;
+      /* Kelsi font for main title only - using Permanent Marker */
+      .title-font {
+        font-family: 'Permanent Marker', cursive;
+        font-weight: 400;
       }
     </style>
   </head>
-  <body class="bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 min-h-screen">
+  <body class="bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 min-h-screen">
     <slot />
   </body>
 </html>

@@ -1,4 +1,6 @@
-# build output
+# Build outputs
+dist/
+.output/
 
 
 # generated types
@@ -24,3 +26,4 @@ pnpm-debug.log*
 .idea/
 
 jxx_design.pub
+

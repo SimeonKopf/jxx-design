@@ -1,0 +1,245 @@
+---
+// src/pages/artwork/[id].astro
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../../components/Navigation.astro';
+import { artworks } from '../../data/artworks.js';
+
+export function getStaticPaths() {
+  return artworks.map((artwork) => ({
+    params: { id: artwork.id },
+    props: { artwork },
+  }));
+}
+
+const { artwork } = Astro.props;
+---
+
+<Layout title={`${artwork.title} - JXX Design`}>
+  <Navigation />
+  
+  <!-- Artwork Detail Page -->
+  <main class="pt-20 min-h-screen bg-white">
+    <div class="container py-12">
+      <!-- Back to Gallery -->
+      <div class="mb-8">
+        <a href="/#artworks" class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-300">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to Gallery
+        </a>
+      </div>
+      
+      <!-- Artwork Content -->
+      <div class="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <!-- Artwork Image -->
+        <div class="space-y-6">
+          <div class="bg-gray-50 rounded-2xl overflow-hidden">
+            <img 
+              src={artwork.image} 
+              alt={artwork.title}
+              class="w-full h-auto object-cover"
+            />
+          </div>
+          
+          <!-- Artwork ID -->
+          <div class="text-center">
+            <span class="inline-block bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-mono">
+              #{artwork.id}
+            </span>
+          </div>
+        </div>
+        
+        <!-- Artwork Details and Contact -->
+        <div class="space-y-8">
+          <!-- Artwork Info -->
+          <div class="space-y-6">
+            <div>
+              <h1 class="text-4xl font-bold text-gray-900 mb-2">{artwork.title}</h1>
+              {artwork.sold ? (
+                <div class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
+                  Sold
+                </div>
+              ) : artwork.price && (
+                <div class="text-3xl font-bold text-gray-900">{artwork.price}</div>
+              )}
+            </div>
+            
+            <div class="space-y-3 text-gray-600">
+              <div class="flex justify-between">
+                <span class="font-medium">Dimensions:</span>
+                <span>{artwork.dimensions}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-medium">Medium:</span>
+                <span>{artwork.medium}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-medium">Year:</span>
+                <span>{artwork.year}</span>
+              </div>
+            </div>
+            
+            {artwork.description && (
+              <div class="border-t pt-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">About this piece</h3>
+                <p class="text-gray-600 leading-relaxed">{artwork.description}</p>
+              </div>
+            )}
+          </div>
+          
+          <!-- Contact Form -->
+          <div class="border-t pt-8">
+            <div class="bg-gray-50 rounded-2xl p-8">
+              <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                {artwork.sold ? 'Interested in Similar Work?' : 'Interested in this Artwork?'}
+              </h2>
+              
+              <form id="artwork-inquiry-form" class="space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name *</label>
+                    <input 
+                      type="text" 
+                      id="name" 
+                      name="name" 
+                      required 
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300"
+                      placeholder="Your full name"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      name="email" 
+                      required 
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300"
+                      placeholder="your@email.com"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                  <input 
+                    type="text" 
+                    id="subject" 
+                    name="subject" 
+                    readonly
+                    value={`Artwork #${artwork.id} - ${artwork.title}`}
+                    class="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg cursor-not-allowed"
+                  />
+                </div>
+                
+                <div>
+                  <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message *</label>
+                  <textarea 
+                    id="message" 
+                    name="message" 
+                    rows="5" 
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 resize-none"
+                    placeholder="Tell me about your interest in this piece..."
+                  >{artwork.sold 
+                    ? 'I am interested in similar artworks or would like to be notified of new pieces.'
+                    : 'I am interested in purchasing this artwork. Please provide more information about availability and purchase details.'}</textarea>
+                </div>
+                
+                <button 
+                  type="submit" 
+                  class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  Send Inquiry
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // EmailJS configuration - Replace with your actual keys
+  const EMAILJS_CONFIG = {
+    SERVICE_ID: 'YOUR_SERVICE_ID',
+    TEMPLATE_ID: 'YOUR_TEMPLATE_ID', 
+    PUBLIC_KEY: 'YOUR_PUBLIC_KEY'
+  };
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('artwork-inquiry-form');
+    
+    form?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      
+      // Show loading state
+      submitBtn.textContent = 'Sending...';
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-75');
+      
+      try {
+        const formData = new FormData(this);
+        const templateParams = {
+          name: formData.get('name'),
+          email: formData.get('email'),
+          subject: formData.get('subject'),
+          message: formData.get('message'),
+          to_email: 'jxx.design@gmail.com'
+        };
+        
+        // TODO: Replace with actual EmailJS implementation
+        // await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, templateParams, EMAILJS_CONFIG.PUBLIC_KEY);
+        console.log('Form submission:', templateParams);
+        
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Show success state
+        submitBtn.textContent = '✓ Message Sent!';
+        submitBtn.classList.remove('from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
+        submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+        
+        // Reset form after delay
+        setTimeout(() => {
+          this.reset();
+          // Pre-fill message again
+          const messageField = this.querySelector('#message');
+          const artworkTitle = this.querySelector('#subject').value;
+          const isSold = artworkTitle.includes('Sold') || submitBtn.textContent.includes('Similar');
+          
+          messageField.value = isSold 
+            ? 'I am interested in similar artworks or would like to be notified of new pieces.'
+            : 'I am interested in purchasing this artwork. Please provide more information about availability and purchase details.';
+          
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75', 'bg-green-600', 'hover:bg-green-700');
+          submitBtn.classList.add('from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
+        }, 3000);
+        
+      } catch (error) {
+        console.error('Form submission error:', error);
+        
+        // Show error state
+        submitBtn.textContent = 'Error - Try Again';
+        submitBtn.classList.remove('from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
+        submitBtn.classList.add('bg-red-600', 'hover:bg-red-700');
+        
+        setTimeout(() => {
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75', 'bg-red-600', 'hover:bg-red-700');
+          submitBtn.classList.add('from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
+        }, 3000);
+      }
+    });
+  });
+</script>

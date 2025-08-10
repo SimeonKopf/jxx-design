@@ -1,58 +1,53 @@
 ---
-// Navigation menu component
+// Clean navigation component
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-md border-b border-gray-600 shadow-lg">
-  <div class="max-w-7xl mx-auto px-6 py-5">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+  <div class="container mx-auto px-6 py-4">
     <div class="flex justify-between items-center">
-      <!-- Logo with Permanent Marker font -->
-      <a href="#home" class="text-3xl font-bold text-white hover:text-pink-400 transition-all duration-300 transform hover:scale-105" style="font-family: 'Permanent Marker', cursive;">
-        <span class="bg-gradient-to-r from-pink-500 via-orange-500 via-yellow-500 via-green-400 via-cyan-500 to-purple-600 bg-clip-text text-transparent">
-          JXX Design
-        </span>
+      <!-- Logo -->
+      <a href="#home" class="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors duration-300 permanent-marker">
+        <span class="gradient-text">JXX Design</span>
       </a>
       
-      <!-- Desktop Menu items -->
-      <div class="hidden lg:flex space-x-12">
-        <a href="#home" class="nav-link text-white hover:text-pink-400 transition-all duration-300 text-xl relative group" style="font-family: 'Permanent Marker', cursive;">
-          HOME
-          <span class="nav-underline"></span>
+      <!-- Desktop Menu -->
+      <div class="hidden lg:flex space-x-8">
+        <a href="#home" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium">
+          Home
         </a>
-        <a href="#artworks" class="nav-link text-white hover:text-cyan-400 transition-all duration-300 text-xl relative group" style="font-family: 'Permanent Marker', cursive;">
-          ARTWORKS
-          <span class="nav-underline"></span>
+        <a href="#artworks" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium">
+          Artworks
         </a>
-        <a href="#about" class="nav-link text-white hover:text-yellow-400 transition-all duration-300 text-xl relative group" style="font-family: 'Permanent Marker', cursive;">
-          ABOUT
-          <span class="nav-underline"></span>
+        <a href="#about" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium">
+          About
         </a>
-        <a href="#contact" class="nav-link text-white hover:text-green-400 transition-all duration-300 text-xl relative group" style="font-family: 'Permanent Marker', cursive;">
-          CONTACT
+        <a href="#contact" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium">
+          Contact
         </a>
       </div>
       
       <!-- Mobile menu button -->
-      <button id="mobile-menu-button" class="lg:hidden text-white hover:text-pink-400 transition-colors duration-300 p-2">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button id="mobile-menu-button" class="lg:hidden text-gray-700 hover:text-gray-900 transition-colors duration-300 p-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
       </button>
     </div>
     
     <!-- Mobile menu -->
-    <div id="mobile-menu" class="lg:hidden hidden mt-6 pb-4 border-t border-gray-700 pt-6">
-      <div class="flex flex-col space-y-6">
-        <a href="#home" class="text-white hover:text-pink-400 transition-colors duration-300 text-xl block py-2" style="font-family: 'Permanent Marker', cursive;">
-          HOME
+    <div id="mobile-menu" class="lg:hidden hidden mt-4 pb-4 border-t border-gray-200 pt-4">
+      <div class="flex flex-col space-y-4">
+        <a href="#home" class="text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-2">
+          Home
         </a>
-        <a href="#artworks" class="text-white hover:text-cyan-400 transition-colors duration-300 text-xl block py-2" style="font-family: 'Permanent Marker', cursive;">
-          ARTWORKS
+        <a href="#artworks" class="text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-2">
+          Artworks
         </a>
-        <a href="#about" class="text-white hover:text-yellow-400 transition-colors duration-300 text-xl block py-2" style="font-family: 'Permanent Marker', cursive;">
-          ABOUT
+        <a href="#about" class="text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-2">
+          About
         </a>
-        <a href="#contact" class="text-white hover:text-green-400 transition-colors duration-300 text-xl block py-2" style="font-family: 'Permanent Marker', cursive;">
-          CONTACT
+        <a href="#contact" class="text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-2">
+          Contact
         </a>
       </div>
     </div>
@@ -81,7 +76,7 @@
         const targetSection = document.querySelector(targetId);
         
         if (targetSection) {
-          const offsetTop = targetSection.offsetTop - 100; // Account for fixed nav
+          const offsetTop = targetSection.offsetTop - 80;
           window.scrollTo({
             top: offsetTop,
             behavior: 'smooth'
@@ -110,52 +105,22 @@
 </script>
 
 <style>
-  nav {
-    transition: all 0.3s ease;
-  }
-  
   .nav-link {
     position: relative;
-    padding: 0.5rem 0;
   }
   
-  .nav-underline {
+  .nav-link::after {
+    content: '';
     position: absolute;
-    bottom: -2px;
+    bottom: -4px;
     left: 0;
     width: 0;
-    height: 3px;
-    background: linear-gradient(45deg, #ff6b9d, #feca57, #4facfe, #48dbfb);
-    border-radius: 2px;
+    height: 2px;
+    background: linear-gradient(45deg, #ff6b9d, #4facfe);
     transition: width 0.3s ease;
   }
   
-  .nav-link:hover .nav-underline {
+  .nav-link:hover::after {
     width: 100%;
-  }
-  
-  /* Enhanced mobile menu styling */
-  #mobile-menu {
-    background: rgba(31, 41, 55, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 1rem;
-    margin-top: 1rem;
-  }
-  
-  /* Logo hover effect */
-  nav a:first-child:hover {
-    filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.5));
-  }
-  
-  /* Better spacing for desktop */
-  @media (min-width: 1024px) {
-    nav {
-      padding: 1rem 0;
-    }
-    
-    .nav-link {
-      font-size: 1.25rem;
-      letter-spacing: 0.5px;
-    }
   }
 </style>

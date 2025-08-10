@@ -1,52 +1,53 @@
 ---
-// Hero section component
+// Clean hero section
 ---
 
-<section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-  <!-- Main content -->
-  <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
-    <!-- Artist name with Permanent Marker font and matching gradients -->
-    <h1 class="text-6xl md:text-8xl lg:text-9xl font-black mb-8 spray-effect kelsi-font">
-      <span class="bg-gradient-to-r from-pink-500 via-orange-500 via-yellow-500 via-green-400 via-cyan-500 to-purple-600 bg-clip-text text-transparent graffiti-shadow">
-        JXX
-      </span>
-      <br>
-      <span class="bg-gradient-to-r from-pink-500 via-orange-500 via-yellow-500 via-green-400 via-cyan-500 to-purple-600 bg-clip-text text-transparent graffiti-shadow">
-        DESIGN
+<section id="home" class="min-h-screen flex items-center justify-center py-20">
+  <div class="container text-center">
+    <!-- Main title with Permanent Marker font -->
+    <h1 class="text-6xl md:text-8xl lg:text-9xl font-bold mb-8 permanent-marker">
+      <span class="gradient-text">
+        JXX<br>DESIGN
       </span>
     </h1>
     
     <!-- Subtitle -->
-    <p class="text-2xl md:text-3xl lg:text-4xl font-bold mb-8 neon-glow text-yellow-400 font-['Permanent_Marker']">
-      GRAFFITI ARTIST & VISUAL CREATOR
+    <p class="text-xl md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
+      Graffiti Artist & Visual Creator
     </p>
     
-    <!-- Spray can icons -->
-    <div class="flex justify-center space-x-8 mb-12">
-      <div class="w-8 h-16 bg-gradient-to-t from-red-500 to-pink-500 rounded-full glow-effect"></div>
-      <div class="w-8 h-16 bg-gradient-to-t from-blue-500 to-cyan-500 rounded-full glow-effect" style="animation-delay: 0.5s;"></div>
-      <div class="w-8 h-16 bg-gradient-to-t from-green-500 to-yellow-500 rounded-full glow-effect" style="animation-delay: 1s;"></div>
-    </div>
-    
     <!-- Social links -->
-    <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8">
+    <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
       <a href="https://instagram.com/jxx_design" target="_blank" 
-         class="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 
-                text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-bold text-base sm:text-lg transform hover:scale-110 
-                transition-all duration-300 shadow-lg hover:shadow-2xl glow-effect font-['Bangers']">
+         class="btn btn-primary px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg">
         @JXX_DESIGN
       </a>
-      <a href="mailto:jxx.design@gmail.com" 
-         class="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 
-                text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-bold text-base sm:text-lg transform hover:scale-110 
-                transition-all duration-300 shadow-lg hover:shadow-2xl glow-effect font-['Bangers']">
-        EMAIL ME
+      <a href="mailto:jxx.design@gmx.de" 
+         class="btn btn-secondary px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg">
+        Email Me
       </a>
     </div>
-  </div>
-  
-  <!-- Scroll indicator -->
-  <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-    <div class="w-1 h-16 bg-gradient-to-b from-transparent via-yellow-400 to-pink-500 rounded-full"></div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-gray-400">
+      <svg class="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
+    </div>
   </div>
 </section>
+
+<style>
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  .animate-bounce {
+    animation: bounce 2s infinite;
+  }
+</style>

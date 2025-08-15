@@ -261,76 +261,64 @@ const { series, imageLeft = false } = Astro.props;
       dot.addEventListener('click', () => goToSlide(index));
     });
     
-    // Mobile touch/swipe support
+    // Mobile touch/swipe support with better handling
     if (isMobile) {
-      let isPointerDown = false;
-      let startClientX = 0;
-      let currentTranslate = 0;
-      let prevTranslate = 0;
-      let animationId = 0;
+      let startX = 0;
+      let moveX = 0;
+      let isSwiping = false;
       
-      // Touch events
-      track.addEventListener('touchstart', handleStart, { passive: false });
-      track.addEventListener('touchmove', handleMove, { passive: false });
-      track.addEventListener('touchend', handleEnd, { passive: false });
-      
-      // Mouse events for desktop testing
-      track.addEventListener('mousedown', handleStart);
-      track.addEventListener('mousemove', handleMove);
-      track.addEventListener('mouseup', handleEnd);
-      track.addEventListener('mouseleave', handleEnd);
-      
-      function handleStart(e) {
-        isPointerDown = true;
-        startClientX = getPositionX(e);
-        prevTranslate = -currentIndex * 100;
+      track.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        isSwiping = false;
         track.style.transition = 'none';
+      }, { passive: true });
+      
+      track.addEventListener('touchmove', function(e) {
+        if (!startX) return;
+        moveX = e.touches[0].clientX;
+        const diff = moveX - startX;
         
-        // Stop any ongoing animation
-        if (animationId) {
-          cancelAnimationFrame(animationId);
+        if (Math.abs(diff) > 10) {
+          isSwiping = true;
+          e.preventDefault();
         }
-      }
+      }, { passive: false });
       
-      function handleMove(e) {
-        if (!isPointerDown) return;
+      track.addEventListener('touchend', function(e) {
+        if (!startX || !isSwiping) {
+          startX = 0;
+          isSwiping = false;
+          return;
+        }
         
-        e.preventDefault();
-        const currentPosition = getPositionX(e);
-        const diff = currentPosition - startClientX;
-        const translateX = prevTranslate + (diff / track.offsetWidth) * 100;
+        const diff = moveX - startX;
+        const minSwipeDistance = 50;
         
-        // Apply smooth resistance at boundaries for infinite loop feel
-        currentTranslate = translateX;
-        track.style.transform = `translateX(${currentTranslate}%)`;
-      }
-      
-      function handleEnd(e) {
-        if (!isPointerDown) return;
-        
-        isPointerDown = false;
         track.style.transition = 'transform 0.3s ease-in-out';
         
-        const threshold = 30; // Percentage of swipe needed to trigger slide change
-        const swipeDistance = currentTranslate - prevTranslate;
-        
-        if (Math.abs(swipeDistance) > threshold) {
-          if (swipeDistance < 0) {
-            // Swiped left - next slide
-            nextSlide();
-          } else {
-            // Swiped right - previous slide  
+        if (Math.abs(diff) > minSwipeDistance) {
+          if (diff > 0) {
+            // Swipe right - previous slide
             prevSlide();
+          } else {
+            // Swipe left - next slide  
+            nextSlide();
           }
         } else {
-          // Snap back to current slide
+          // Snap back to current position
           updateCarousel();
         }
-      }
+        
+        // Reset values
+        startX = 0;
+        moveX = 0;
+        isSwiping = false;
+      }, { passive: true });
       
-      function getPositionX(e) {
-        return e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-      }
+      // Prevent context menu on long press
+      track.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
     }
     
     // Click to view artwork

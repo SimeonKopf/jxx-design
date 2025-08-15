@@ -191,10 +191,8 @@ const { series, imageLeft = false } = Astro.props;
     const isMobile = carousel.classList.contains('mobile-carousel-wrapper');
     
     let currentIndex = 0;
-    let startX = 0;
-    let isDragging = false;
     
-    // Update carousel position
+    // Update carousel position and UI
     function updateCarousel() {
       const translateX = -currentIndex * 100;
       track.style.transform = `translateX(${translateX}%)`;
@@ -205,9 +203,8 @@ const { series, imageLeft = false } = Astro.props;
         dot.classList.toggle('bg-gray-300', index !== currentIndex);
       });
       
-      // Update artwork info (desktop only)
+      // Update artwork info
       if (!isMobile) {
-        // Find the correct artwork info container for this specific series
         const seriesContainer = carousel.closest('.series-container');
         if (seriesContainer) {
           const artworkDetails = seriesContainer.querySelectorAll('.artwork-details');
@@ -217,8 +214,7 @@ const { series, imageLeft = false } = Astro.props;
           });
         }
       } else {
-        // Update mobile artwork info
-        const seriesContainer = carousel.closest('.series-container, .md\\:hidden');
+        const seriesContainer = carousel.closest('.md\\:hidden');
         if (seriesContainer) {
           const mobileArtworkDetails = seriesContainer.querySelectorAll('.mobile-artwork-details');
           mobileArtworkDetails.forEach((detail, index) => {
@@ -229,9 +225,8 @@ const { series, imageLeft = false } = Astro.props;
       }
     }
     
-    // Navigation functions
+    // Navigation functions with infinite loop
     function goToSlide(index) {
-      // Enable infinite loop
       if (index >= slides.length) {
         currentIndex = 0;
       } else if (index < 0) {
@@ -252,80 +247,92 @@ const { series, imageLeft = false } = Astro.props;
     
     // Desktop arrow navigation
     if (prevButton && nextButton) {
-      prevButton.addEventListener('click', prevSlide);
-      nextButton.addEventListener('click', nextSlide);
+      prevButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        prevSlide();
+      });
+      
+      nextButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        nextSlide();
+      });
     }
     
     // Dot navigation
     dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => goToSlide(index));
+      dot.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        goToSlide(index);
+      });
     });
     
-    // Mobile touch/swipe support with better handling
+    // COMPLETELY REWRITTEN MOBILE SWIPE - SIMPLE AND RELIABLE
     if (isMobile) {
-      let startX = 0;
-      let moveX = 0;
-      let isSwiping = false;
+      let touchStartX = 0;
+      let touchEndX = 0;
+      let isTouching = false;
+      
+      // Reset function to clean up state
+      function resetTouch() {
+        touchStartX = 0;
+        touchEndX = 0;
+        isTouching = false;
+        track.style.transition = 'transform 0.3s ease-in-out';
+      }
       
       track.addEventListener('touchstart', function(e) {
-        startX = e.touches[0].clientX;
-        isSwiping = false;
+        touchStartX = e.touches[0].clientX;
+        isTouching = true;
         track.style.transition = 'none';
       }, { passive: true });
       
       track.addEventListener('touchmove', function(e) {
-        if (!startX) return;
-        moveX = e.touches[0].clientX;
-        const diff = moveX - startX;
-        
-        if (Math.abs(diff) > 10) {
-          isSwiping = true;
-          e.preventDefault();
-        }
-      }, { passive: false });
+        if (!isTouching) return;
+        touchEndX = e.touches[0].clientX;
+      }, { passive: true });
       
       track.addEventListener('touchend', function(e) {
-        if (!startX || !isSwiping) {
-          startX = 0;
-          isSwiping = false;
+        if (!isTouching) {
+          resetTouch();
           return;
         }
         
-        const diff = moveX - startX;
+        const swipeDistance = touchStartX - touchEndX;
         const minSwipeDistance = 50;
         
-        track.style.transition = 'transform 0.3s ease-in-out';
-        
-        if (Math.abs(diff) > minSwipeDistance) {
-          if (diff > 0) {
-            // Swipe right - previous slide
-            prevSlide();
-          } else {
-            // Swipe left - next slide  
+        if (Math.abs(swipeDistance) > minSwipeDistance) {
+          if (swipeDistance > 0) {
+            // Swiped left - next slide
             nextSlide();
+          } else {
+            // Swiped right - previous slide
+            prevSlide();
           }
         } else {
-          // Snap back to current position
+          // Not enough swipe distance - snap back
           updateCarousel();
         }
         
-        // Reset values
-        startX = 0;
-        moveX = 0;
-        isSwiping = false;
+        resetTouch();
       }, { passive: true });
       
-      // Prevent context menu on long press
-      track.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-      });
+      // Clean up on touch cancel
+      track.addEventListener('touchcancel', function(e) {
+        resetTouch();
+      }, { passive: true });
     }
     
     // Click to view artwork
     slides.forEach(slide => {
-      slide.addEventListener('click', function() {
-        const artworkId = this.dataset.artworkId;
-        window.location.href = `/artwork/${artworkId}`;
+      slide.addEventListener('click', function(e) {
+        // Only navigate if not swiping
+        if (!isMobile || !isTouching) {
+          const artworkId = this.dataset.artworkId;
+          window.location.href = `/artwork/${artworkId}`;
+        }
       });
     });
   }

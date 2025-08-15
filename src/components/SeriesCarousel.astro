@@ -45,16 +45,16 @@ const { series, imageLeft = false } = Astro.props;
             ))}
           </div>
           
-          <!-- Navigation Arrows -->
+          <!-- Navigation Arrows - ALWAYS VISIBLE -->
           {series.artworks.length > 1 && (
             <>
-              <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-sm transition-all duration-300 opacity-0 group-hover:opacity-100">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-2 shadow-md transition-all duration-300 z-10">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
               </button>
-              <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-sm transition-all duration-300 opacity-0 group-hover:opacity-100">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-2 shadow-md transition-all duration-300 z-10">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
               </button>
@@ -132,6 +132,22 @@ const { series, imageLeft = false } = Astro.props;
                 </div>
               ))}
             </div>
+            
+            <!-- Mobile Navigation Arrows - ALWAYS VISIBLE -->
+            {series.artworks.length > 1 && (
+              <>
+                <button class="mobile-carousel-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md transition-all duration-300 z-10">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                </button>
+                <button class="mobile-carousel-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md transition-all duration-300 z-10">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </>
+            )}
           </div>
           
           <!-- Mobile Progress Dots -->
@@ -185,8 +201,8 @@ const { series, imageLeft = false } = Astro.props;
     const track = carousel.querySelector('.carousel-track, .mobile-carousel-track');
     const slides = carousel.querySelectorAll('.carousel-slide, .mobile-carousel-slide');
     const dots = carousel.parentElement.querySelectorAll('.dot, .mobile-dot');
-    const prevButton = carousel.querySelector('.carousel-prev');
-    const nextButton = carousel.querySelector('.carousel-next');
+    const prevButton = carousel.querySelector('.carousel-prev, .mobile-carousel-prev');
+    const nextButton = carousel.querySelector('.carousel-next, .mobile-carousel-next');
     const seriesId = carousel.dataset.series;
     const isMobile = carousel.classList.contains('mobile-carousel-wrapper');
     
@@ -245,14 +261,16 @@ const { series, imageLeft = false } = Astro.props;
       goToSlide(currentIndex - 1);
     }
     
-    // Desktop arrow navigation
-    if (prevButton && nextButton) {
+    // Arrow button navigation (both desktop and mobile)
+    if (prevButton) {
       prevButton.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         prevSlide();
       });
-      
+    }
+    
+    if (nextButton) {
       nextButton.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -269,67 +287,79 @@ const { series, imageLeft = false } = Astro.props;
       });
     });
     
-    // COMPLETELY REWRITTEN MOBILE SWIPE - SIMPLE AND RELIABLE
+    // MOBILE SWIPE - BULLETPROOF VERSION
     if (isMobile) {
-      let touchStartX = 0;
-      let touchEndX = 0;
-      let isTouching = false;
+      let startX = null;
+      let startY = null;
+      let currentX = null;
+      let currentY = null;
+      let isHorizontalSwipe = false;
       
-      // Reset function to clean up state
-      function resetTouch() {
-        touchStartX = 0;
-        touchEndX = 0;
-        isTouching = false;
-        track.style.transition = 'transform 0.3s ease-in-out';
+      function handleTouchStart(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentX = startX;
+        currentY = startY;
+        isHorizontalSwipe = false;
       }
       
-      track.addEventListener('touchstart', function(e) {
-        touchStartX = e.touches[0].clientX;
-        isTouching = true;
-        track.style.transition = 'none';
-      }, { passive: true });
+      function handleTouchMove(e) {
+        if (!startX || !startY) return;
+        
+        currentX = e.touches[0].clientX;
+        currentY = e.touches[0].clientY;
+        
+        const diffX = Math.abs(currentX - startX);
+        const diffY = Math.abs(currentY - startY);
+        
+        // Determine if this is a horizontal swipe
+        if (diffX > 10 && diffX > diffY) {
+          isHorizontalSwipe = true;
+          e.preventDefault(); // Prevent scrolling
+        }
+      }
       
-      track.addEventListener('touchmove', function(e) {
-        if (!isTouching) return;
-        touchEndX = e.touches[0].clientX;
-      }, { passive: true });
-      
-      track.addEventListener('touchend', function(e) {
-        if (!isTouching) {
-          resetTouch();
+      function handleTouchEnd(e) {
+        if (!startX || !isHorizontalSwipe) {
+          resetTouchState();
           return;
         }
         
-        const swipeDistance = touchStartX - touchEndX;
-        const minSwipeDistance = 50;
+        const diffX = currentX - startX;
+        const threshold = 30; // Lower threshold for easier swiping
         
-        if (Math.abs(swipeDistance) > minSwipeDistance) {
-          if (swipeDistance > 0) {
-            // Swiped left - next slide
-            nextSlide();
-          } else {
-            // Swiped right - previous slide
+        if (Math.abs(diffX) > threshold) {
+          if (diffX > 0) {
+            // Swipe right = previous
             prevSlide();
+          } else {
+            // Swipe left = next
+            nextSlide();
           }
-        } else {
-          // Not enough swipe distance - snap back
-          updateCarousel();
         }
         
-        resetTouch();
-      }, { passive: true });
+        resetTouchState();
+      }
       
-      // Clean up on touch cancel
-      track.addEventListener('touchcancel', function(e) {
-        resetTouch();
-      }, { passive: true });
+      function resetTouchState() {
+        startX = null;
+        startY = null;
+        currentX = null;
+        currentY = null;
+        isHorizontalSwipe = false;
+      }
+      
+      // Add touch event listeners
+      track.addEventListener('touchstart', handleTouchStart, { passive: true });
+      track.addEventListener('touchmove', handleTouchMove, { passive: false });
+      track.addEventListener('touchend', handleTouchEnd, { passive: true });
+      track.addEventListener('touchcancel', resetTouchState, { passive: true });
     }
     
-    // Click to view artwork
+    // Click to view artwork (but not when swiping)
     slides.forEach(slide => {
       slide.addEventListener('click', function(e) {
-        // Only navigate if not swiping
-        if (!isMobile || !isTouching) {
+        if (!isMobile || !isHorizontalSwipe) {
           const artworkId = this.dataset.artworkId;
           window.location.href = `/artwork/${artworkId}`;
         }

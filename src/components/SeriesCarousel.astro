@@ -106,15 +106,15 @@ const { series, imageLeft = false } = Astro.props;
   
   <!-- Mobile Layout -->
   <div class="md:hidden">
-    <div class="space-y-6">
+    <div class="space-y-4">
       <!-- Series Title -->
       <div class="text-center px-4">
-        <h3 class="text-2xl font-bold text-gray-900 mb-2">{series.title}</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">{series.title}</h3>
       </div>
       
       <!-- Mobile Carousel -->
       <div class="mobile-carousel-container px-4">
-        <div class="relative bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="relative bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
           <div class="mobile-carousel-wrapper relative" data-series={`${series.id}-mobile`}>
             <div class="mobile-carousel-track flex transition-transform duration-300 ease-in-out">
               {series.artworks.map((artwork, index) => (
@@ -145,6 +145,26 @@ const { series, imageLeft = false } = Astro.props;
               ))}
             </div>
           )}
+        </div>
+      </div>
+      
+      <!-- Mobile Artwork Info -->
+      <div class="px-4">
+        <div class="mobile-artwork-info text-center">
+          {series.artworks.map((artwork, index) => (
+            <div class={`mobile-artwork-details ${index === 0 ? 'block' : 'hidden'}`} data-mobile-artwork-index={index}>
+              <div class="space-y-1">
+                <div class="text-lg font-bold text-gray-900">#{artwork.id}</div>
+                <div class="text-sm font-medium text-gray-700">{artwork.title}</div>
+                {!artwork.sold && (
+                  <div class="text-sm font-medium text-gray-900">€{artwork.price}</div>
+                )}
+                {artwork.sold && (
+                  <div class="text-sm font-medium text-gray-900">Sold</div>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -196,6 +216,16 @@ const { series, imageLeft = false } = Astro.props;
             detail.classList.toggle('hidden', index !== currentIndex);
           });
         }
+      } else {
+        // Update mobile artwork info
+        const seriesContainer = carousel.closest('.series-container, .md\\:hidden');
+        if (seriesContainer) {
+          const mobileArtworkDetails = seriesContainer.querySelectorAll('.mobile-artwork-details');
+          mobileArtworkDetails.forEach((detail, index) => {
+            detail.classList.toggle('block', index === currentIndex);
+            detail.classList.toggle('hidden', index !== currentIndex);
+          });
+        }
       }
     }
     
@@ -233,70 +263,74 @@ const { series, imageLeft = false } = Astro.props;
     
     // Mobile touch/swipe support
     if (isMobile) {
-      track.addEventListener('touchstart', handleTouchStart, { passive: true });
-      track.addEventListener('touchmove', handleTouchMove, { passive: true });
-      track.addEventListener('touchend', handleTouchEnd, { passive: true });
+      let isPointerDown = false;
+      let startClientX = 0;
+      let currentTranslate = 0;
+      let prevTranslate = 0;
+      let animationId = 0;
       
-      // Mouse drag support for desktop testing
-      track.addEventListener('mousedown', handleMouseDown);
-      track.addEventListener('mousemove', handleMouseMove);
-      track.addEventListener('mouseup', handleMouseUp);
-      track.addEventListener('mouseleave', handleMouseUp);
-    }
-    
-    function handleTouchStart(e) {
-      startX = e.touches[0].clientX;
-      isDragging = true;
-    }
-    
-    function handleTouchMove(e) {
-      if (!isDragging) return;
-      e.preventDefault();
-    }
-    
-    function handleTouchEnd(e) {
-      if (!isDragging) return;
+      // Touch events
+      track.addEventListener('touchstart', handleStart, { passive: false });
+      track.addEventListener('touchmove', handleMove, { passive: false });
+      track.addEventListener('touchend', handleEnd, { passive: false });
       
-      const endX = e.changedTouches[0].clientX;
-      const diffX = startX - endX;
+      // Mouse events for desktop testing
+      track.addEventListener('mousedown', handleStart);
+      track.addEventListener('mousemove', handleMove);
+      track.addEventListener('mouseup', handleEnd);
+      track.addEventListener('mouseleave', handleEnd);
       
-      if (Math.abs(diffX) > 50) { // Minimum swipe distance
-        if (diffX > 0) {
-          nextSlide(); // Swipe left = next slide (infinite loop)
-        } else if (diffX < 0) {
-          prevSlide(); // Swipe right = previous slide (infinite loop)
+      function handleStart(e) {
+        isPointerDown = true;
+        startClientX = getPositionX(e);
+        prevTranslate = -currentIndex * 100;
+        track.style.transition = 'none';
+        
+        // Stop any ongoing animation
+        if (animationId) {
+          cancelAnimationFrame(animationId);
         }
       }
       
-      isDragging = false;
-    }
-    
-    function handleMouseDown(e) {
-      startX = e.clientX;
-      isDragging = true;
-      e.preventDefault();
-    }
-    
-    function handleMouseMove(e) {
-      if (!isDragging) return;
-      e.preventDefault();
-    }
-    
-    function handleMouseUp(e) {
-      if (!isDragging) return;
+      function handleMove(e) {
+        if (!isPointerDown) return;
+        
+        e.preventDefault();
+        const currentPosition = getPositionX(e);
+        const diff = currentPosition - startClientX;
+        const translateX = prevTranslate + (diff / track.offsetWidth) * 100;
+        
+        // Apply smooth resistance at boundaries for infinite loop feel
+        currentTranslate = translateX;
+        track.style.transform = `translateX(${currentTranslate}%)`;
+      }
       
-      const endX = e.clientX;
-      const diffX = startX - endX;
-      
-      if (Math.abs(diffX) > 50) {
-        if (diffX > 0) {
-          nextSlide(); // Mouse drag left = next slide (infinite loop)
-        } else if (diffX < 0) {
-          prevSlide(); // Mouse drag right = previous slide (infinite loop)
+      function handleEnd(e) {
+        if (!isPointerDown) return;
+        
+        isPointerDown = false;
+        track.style.transition = 'transform 0.3s ease-in-out';
+        
+        const threshold = 30; // Percentage of swipe needed to trigger slide change
+        const swipeDistance = currentTranslate - prevTranslate;
+        
+        if (Math.abs(swipeDistance) > threshold) {
+          if (swipeDistance < 0) {
+            // Swiped left - next slide
+            nextSlide();
+          } else {
+            // Swiped right - previous slide  
+            prevSlide();
+          }
+        } else {
+          // Snap back to current slide
+          updateCarousel();
         }
       }
       
-      isDragging = false;
+      function getPositionX(e) {
+        return e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+      }
     }
     
     // Click to view artwork

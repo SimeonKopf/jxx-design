@@ -17,7 +17,7 @@ import { series } from '../data/series.js';
   
   <!-- Artworks Series Section -->
   <section id="artworks" class="py-20">
-    <div class="container">
+    <div class="container mx-auto">
       <!-- Section title -->
       <div class="text-center mb-16">
         <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">My Artworks</h2>
@@ -27,7 +27,7 @@ import { series } from '../data/series.js';
       </div>
       
       <!-- Series Carousels -->
-      <div class="space-y-20">
+      <div class="space-y-20 max-w-7xl mx-auto px-4">
         {series.map((seriesItem, index) => (
           <SeriesCarousel 
             series={seriesItem} 

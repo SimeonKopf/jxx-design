@@ -2,10 +2,11 @@
 // src/pages/artwork/[id].astro
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
-import { artworks } from '../../data/artworks.js';
+import { getAllArtworks } from '../../data/series.js';
 
 export function getStaticPaths() {
-  return artworks.map((artwork) => ({
+  const allArtworks = getAllArtworks();
+  return allArtworks.map((artwork) => ({
     params: { id: artwork.id },
     props: { artwork },
   }));

@@ -2,10 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.astro';
 import Hero from '../components/Hero.astro';
-import ArtworkCard from '../components/ArtworkCard.astro';
+import SeriesCarousel from '../components/SeriesCarousel.astro';
 import About from '../components/About.astro';
 import Contact from '../components/Contact.astro';
-import { artworks } from '../data/artworks.js';
+import { series } from '../data/series.js';
 ---
 
 <Layout title="JXX Design - Graffiti Artist Portfolio">
@@ -15,36 +15,24 @@ import { artworks } from '../data/artworks.js';
   <!-- Hero Section -->
   <Hero />
   
-  <!-- Artworks Section -->
+  <!-- Artworks Series Section -->
   <section id="artworks" class="py-20">
     <div class="container">
       <!-- Section title -->
       <div class="text-center mb-16">
         <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">My Artworks</h2>
         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-          A collection of contemporary works exploring urban culture and artistic expression
+          A collection of contemporary works exploring urban culture and artistic expression, organized in thematic series
         </p>
       </div>
       
-      <!-- Artworks grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {artworks.map((artwork) => (
-          <div key={artwork.id}>
-            <ArtworkCard
-              id={artwork.id}
-              title={artwork.title}
-              dimensions={artwork.dimensions}
-              medium={artwork.medium}
-              year={artwork.year}
-              price={artwork.price}
-              sold={artwork.sold}
-              image={artwork.image}
-            />
-            <!-- Artwork ID display -->
-            <div class="text-center mt-2">
-              <span class="text-xs text-gray-400 font-mono">#{artwork.id}</span>
-            </div>
-          </div>
+      <!-- Series Carousels -->
+      <div class="space-y-20">
+        {series.map((seriesItem, index) => (
+          <SeriesCarousel 
+            series={seriesItem} 
+            imageLeft={index % 2 === 1}
+          />
         ))}
       </div>
     </div>

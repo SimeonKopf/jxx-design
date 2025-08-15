@@ -1,65 +1,82 @@
 ---
-// About section component
+// Clean minimal about section
 ---
 
-<section id="about" class="py-20 px-4 relative">
-  <div class="max-w-6xl mx-auto relative z-10">
-    <!-- Section title -->
-    <h2 class="text-5xl md:text-7xl font-bold text-center mb-16 graffiti-shadow">
-      <span class="bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent font-['Bangers']">
-        ABOUT THE ARTIST
-      </span>
-    </h2>
-    
-    <div class="grid md:grid-cols-2 gap-12 items-center">
-      <!-- Artist image placeholder -->
-      <div class="relative group">
-        <div class="absolute inset-0 bg-gradient-to-r from-pink-500 to-yellow-500 rounded-3xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
-        <div class="relative bg-gray-800 rounded-3xl p-8 border-4 border-gradient-to-r from-cyan-500 to-purple-500">
-          <img src="/img/20250705_1941_Graffiti-Abenteuer am Berg_simple_compose_01jzdy68kae69bb1egcajeh4yv (1).png" alt="JXX Design Artist" 
-               class="w-full h-96 object-cover rounded-2xl" />
-          <!-- Spray paint effect overlay -->
-          <div class="absolute top-4 right-4 w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full opacity-80 blur-sm"></div>
-          <div class="absolute bottom-4 left-4 w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full opacity-60 blur-sm"></div>
-        </div>
+<section id="about" class="py-20 bg-gray-50">
+  <div class="container">
+    <div class="max-w-6xl mx-auto">
+      <!-- Section title -->
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">About the Artist</h2>
+        <div class="w-24 h-1 bg-gray-300 mx-auto"></div>
       </div>
       
-      <!-- About text -->
-      <div class="space-y-6">
-        <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700">
-          <p class="text-lg md:text-xl leading-relaxed text-gray-100 mb-6">
-            Welcome to my world of <span class="text-pink-400 font-bold">street art</span> and 
-            <span class="text-cyan-400 font-bold">urban expression</span>! I'm a graffiti artist 
-            who transforms walls, canvases, and spaces into vibrant storytelling mediums.
-          </p>
-          
-          <p class="text-lg md:text-xl leading-relaxed text-gray-100 mb-6">
-            My work blends traditional graffiti techniques with contemporary design, creating 
-            pieces that speak to the <span class="text-yellow-400 font-bold">energy</span> and 
-            <span class="text-green-400 font-bold">pulse</span> of modern urban culture.
-          </p>
-          
-          <p class="text-lg md:text-xl leading-relaxed text-gray-100">
-            From commissioned murals to gallery pieces, each artwork represents a moment of 
-            <span class="text-purple-400 font-bold">creative rebellion</span> and 
-            <span class="text-orange-400 font-bold">artistic freedom</span>.
-          </p>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <!-- Artist image -->
+        <div class="order-2 md:order-1">
+          <div class="bg-white rounded-2xl p-4 shadow-lg">
+            <img 
+              src="/img/portrait_artist/IMG_0072.JPG" 
+              alt="JXX Design Artist" 
+              class="w-full h-auto rounded-xl object-cover"
+            />
+          </div>
         </div>
         
-        <!-- Skills/tags -->
-        <div class="flex flex-wrap gap-3">
-          <span class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full font-bold text-sm font-['Bangers']">
-            STREET ART
-          </span>
-          <span class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2 rounded-full font-bold text-sm font-['Bangers']">
-            MURALS
-          </span>
-          <span class="bg-gradient-to-r from-green-500 to-yellow-500 text-black px-4 py-2 rounded-full font-bold text-sm font-['Bangers']">
-            CANVAS WORK
-          </span>
-          <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full font-bold text-sm font-['Bangers']">
-            COMMISSIONS
-          </span>
+        <!-- About text -->
+        <div class="order-1 md:order-2 space-y-6">
+          <div class="prose prose-lg max-w-none">
+            <p class="text-lg leading-relaxed text-gray-700 mb-6">
+              Welcome to my world of <strong>street art</strong> and <strong>urban expression</strong>. 
+              I'm a graffiti artist who transforms walls, canvases, and spaces into vibrant 
+              storytelling mediums that speak to the energy of modern culture.
+            </p>
+            
+            <p class="text-lg leading-relaxed text-gray-700 mb-6">
+              My work blends traditional graffiti techniques with contemporary design, creating 
+              pieces that capture the <strong>pulse</strong> and <strong>rhythm</strong> of urban life. 
+              Each artwork represents a moment of creative rebellion and artistic freedom.
+            </p>
+            
+            <p class="text-lg leading-relaxed text-gray-700 mb-8">
+              From commissioned murals to gallery pieces, I explore themes of identity, 
+              community, and the intersection between street culture and fine art.
+            </p>
+          </div>
+          
+          <!-- Skills/expertise -->
+          <div class="space-y-4">
+            <h3 class="text-xl font-semibold text-gray-900">Specialties</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-white border border-gray-200 rounded-lg p-4 text-center shadow-sm">
+                <div class="text-gray-900 font-medium">Street Art</div>
+                <div class="text-sm text-gray-600">Original murals</div>
+              </div>
+              <div class="bg-white border border-gray-200 rounded-lg p-4 text-center shadow-sm">
+                <div class="text-gray-900 font-medium">Canvas Work</div>
+                <div class="text-sm text-gray-600">Gallery pieces</div>
+              </div>
+              <div class="bg-white border border-gray-200 rounded-lg p-4 text-center shadow-sm">
+                <div class="text-gray-900 font-medium">Commissions</div>
+                <div class="text-sm text-gray-600">Custom artwork</div>
+              </div>
+              <div class="bg-white border border-gray-200 rounded-lg p-4 text-center shadow-sm">
+                <div class="text-gray-900 font-medium">Design</div>
+                <div class="text-sm text-gray-600">Visual identity</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Call to action -->
+          <div class="pt-6">
+            <a href="#contact" 
+               class="inline-flex items-center bg-gray-900 hover:bg-gray-800 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300">
+              Work with me
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>

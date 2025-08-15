@@ -1,0 +1,325 @@
+---
+export interface Props {
+  series: {
+    id: string;
+    title: string;
+    description: string;
+    artworks: Array<{
+      id: string;
+      title: string;
+      price: string;
+      sold: boolean;
+      image: string;
+    }>;
+  };
+  imageLeft?: boolean;
+}
+
+const { series, imageLeft = false } = Astro.props;
+---
+
+<div class={`series-container ${imageLeft ? 'image-left' : 'image-right'} max-w-6xl mx-auto px-8`}>
+  <!-- Desktop Layout -->
+  <div class="hidden md:grid md:grid-cols-2 gap-16 items-center">
+    <!-- Image Carousel -->
+    <div class={`carousel-container ${imageLeft ? '' : 'md:order-2'}`}>
+      <div class="relative bg-white rounded-xl shadow-sm overflow-hidden mx-4">
+        <!-- Carousel Images -->
+        <div class="carousel-wrapper relative" data-series={series.id}>
+          <div class="carousel-track flex transition-transform duration-500 ease-in-out">
+            {series.artworks.map((artwork, index) => (
+              <div class="carousel-slide flex-shrink-0 w-full relative group cursor-pointer" data-artwork-id={artwork.id}>
+                <img 
+                  src={artwork.image} 
+                  alt={artwork.title}
+                  class="w-full h-80 object-cover"
+                />
+                <!-- Subtle overlay -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent group-hover:from-black/10 transition-all duration-300"></div>
+                {artwork.sold && (
+                  <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
+                    Sold
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          
+          <!-- Navigation Arrows -->
+          {series.artworks.length > 1 && (
+            <>
+              <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-sm transition-all duration-300 opacity-0 group-hover:opacity-100">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+              </button>
+              <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-sm transition-all duration-300 opacity-0 group-hover:opacity-100">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </button>
+            </>
+          )}
+        </div>
+        
+        <!-- Progress Dots -->
+        {series.artworks.length > 1 && (
+          <div class="flex justify-center space-x-1.5 py-3 bg-white">
+            {series.artworks.map((_, index) => (
+              <button 
+                class={`dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'}`}
+                data-index={index}
+              ></button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+    
+    <!-- Text Content -->
+    <div class={`content-container ${imageLeft ? 'md:order-2' : 'md:order-1'} flex flex-col justify-center px-4`}>
+      <div class={`space-y-4 ${!imageLeft ? 'text-right' : 'text-left'}`}>
+        <div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">{series.title}</h3>
+        </div>
+        
+        <!-- Dynamic Artwork Info - No Box, Text Aligned -->
+        <div class="artwork-info">
+          {series.artworks.map((artwork, index) => (
+            <div class={`artwork-details ${index === 0 ? 'block' : 'hidden'}`} data-artwork-index={index}>
+              <div class="space-y-1">
+                <div class="text-xl font-bold text-gray-900">#{artwork.id}</div>
+                <div class="text-base font-medium text-gray-700">{artwork.title}</div>
+                {!artwork.sold && (
+                  <div class="text-base font-medium text-gray-900">€{artwork.price}</div>
+                )}
+                {artwork.sold && (
+                  <div class="text-base font-medium text-gray-900">Sold</div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Mobile Layout -->
+  <div class="md:hidden">
+    <div class="space-y-6">
+      <!-- Series Title -->
+      <div class="text-center px-4">
+        <h3 class="text-2xl font-bold text-gray-900 mb-2">{series.title}</h3>
+      </div>
+      
+      <!-- Mobile Carousel -->
+      <div class="mobile-carousel-container px-4">
+        <div class="relative bg-white rounded-xl shadow-sm overflow-hidden">
+          <div class="mobile-carousel-wrapper relative" data-series={`${series.id}-mobile`}>
+            <div class="mobile-carousel-track flex transition-transform duration-300 ease-in-out">
+              {series.artworks.map((artwork, index) => (
+                <div class="mobile-carousel-slide flex-shrink-0 w-full relative cursor-pointer" data-artwork-id={artwork.id}>
+                  <img 
+                    src={artwork.image} 
+                    alt={artwork.title}
+                    class="w-full h-72 object-cover"
+                  />
+                  {artwork.sold && (
+                    <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
+                      Sold
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <!-- Mobile Progress Dots -->
+          {series.artworks.length > 1 && (
+            <div class="flex justify-center space-x-1.5 py-3 bg-white">
+              {series.artworks.map((_, index) => (
+                <div 
+                  class={`mobile-dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'}`}
+                  data-index={index}
+                ></div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all carousels
+    const carousels = document.querySelectorAll('.carousel-wrapper, .mobile-carousel-wrapper');
+    
+    carousels.forEach(carousel => {
+      initializeCarousel(carousel);
+    });
+  });
+  
+  function initializeCarousel(carousel) {
+    const track = carousel.querySelector('.carousel-track, .mobile-carousel-track');
+    const slides = carousel.querySelectorAll('.carousel-slide, .mobile-carousel-slide');
+    const dots = carousel.parentElement.querySelectorAll('.dot, .mobile-dot');
+    const prevButton = carousel.querySelector('.carousel-prev');
+    const nextButton = carousel.querySelector('.carousel-next');
+    const seriesId = carousel.dataset.series;
+    const isMobile = carousel.classList.contains('mobile-carousel-wrapper');
+    
+    let currentIndex = 0;
+    let startX = 0;
+    let isDragging = false;
+    
+    // Update carousel position
+    function updateCarousel() {
+      const translateX = -currentIndex * 100;
+      track.style.transform = `translateX(${translateX}%)`;
+      
+      // Update dots
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('bg-gray-700', index === currentIndex);
+        dot.classList.toggle('bg-gray-300', index !== currentIndex);
+      });
+      
+      // Update artwork info (desktop only)
+      if (!isMobile) {
+        // Find the correct artwork info container for this specific series
+        const seriesContainer = carousel.closest('.series-container');
+        if (seriesContainer) {
+          const artworkDetails = seriesContainer.querySelectorAll('.artwork-details');
+          artworkDetails.forEach((detail, index) => {
+            detail.classList.toggle('block', index === currentIndex);
+            detail.classList.toggle('hidden', index !== currentIndex);
+          });
+        }
+      }
+    }
+    
+    // Navigation functions
+    function goToSlide(index) {
+      // Enable infinite loop
+      if (index >= slides.length) {
+        currentIndex = 0;
+      } else if (index < 0) {
+        currentIndex = slides.length - 1;
+      } else {
+        currentIndex = index;
+      }
+      updateCarousel();
+    }
+    
+    function nextSlide() {
+      goToSlide(currentIndex + 1);
+    }
+    
+    function prevSlide() {
+      goToSlide(currentIndex - 1);
+    }
+    
+    // Desktop arrow navigation
+    if (prevButton && nextButton) {
+      prevButton.addEventListener('click', prevSlide);
+      nextButton.addEventListener('click', nextSlide);
+    }
+    
+    // Dot navigation
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => goToSlide(index));
+    });
+    
+    // Mobile touch/swipe support
+    if (isMobile) {
+      track.addEventListener('touchstart', handleTouchStart, { passive: true });
+      track.addEventListener('touchmove', handleTouchMove, { passive: true });
+      track.addEventListener('touchend', handleTouchEnd, { passive: true });
+      
+      // Mouse drag support for desktop testing
+      track.addEventListener('mousedown', handleMouseDown);
+      track.addEventListener('mousemove', handleMouseMove);
+      track.addEventListener('mouseup', handleMouseUp);
+      track.addEventListener('mouseleave', handleMouseUp);
+    }
+    
+    function handleTouchStart(e) {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    }
+    
+    function handleTouchMove(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+    }
+    
+    function handleTouchEnd(e) {
+      if (!isDragging) return;
+      
+      const endX = e.changedTouches[0].clientX;
+      const diffX = startX - endX;
+      
+      if (Math.abs(diffX) > 50) { // Minimum swipe distance
+        if (diffX > 0) {
+          nextSlide(); // Swipe left = next slide (infinite loop)
+        } else if (diffX < 0) {
+          prevSlide(); // Swipe right = previous slide (infinite loop)
+        }
+      }
+      
+      isDragging = false;
+    }
+    
+    function handleMouseDown(e) {
+      startX = e.clientX;
+      isDragging = true;
+      e.preventDefault();
+    }
+    
+    function handleMouseMove(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+    }
+    
+    function handleMouseUp(e) {
+      if (!isDragging) return;
+      
+      const endX = e.clientX;
+      const diffX = startX - endX;
+      
+      if (Math.abs(diffX) > 50) {
+        if (diffX > 0) {
+          nextSlide(); // Mouse drag left = next slide (infinite loop)
+        } else if (diffX < 0) {
+          prevSlide(); // Mouse drag right = previous slide (infinite loop)
+        }
+      }
+      
+      isDragging = false;
+    }
+    
+    // Click to view artwork
+    slides.forEach(slide => {
+      slide.addEventListener('click', function() {
+        const artworkId = this.dataset.artworkId;
+        window.location.href = `/artwork/${artworkId}`;
+      });
+    });
+  }
+</script>
+
+<style>
+  .carousel-wrapper:hover .carousel-prev,
+  .carousel-wrapper:hover .carousel-next {
+    opacity: 1;
+  }
+  
+  .mobile-carousel-track {
+    touch-action: pan-y;
+  }
+  
+  .mobile-carousel-slide {
+    user-select: none;
+  }
+</style>

@@ -1,5 +1,5 @@
 ---
-// Clean minimal about section
+// src/components/About.astro - Updated with translation support
 ---
 
 <section id="about" class="py-20 bg-gray-50">
@@ -7,7 +7,9 @@
     <div class="max-w-6xl mx-auto">
       <!-- Section title -->
       <div class="text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 epilogue">Über mich</h2>
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 epilogue" data-translate="about-title">
+          Über mich
+        </h2>
         <div class="w-24 h-1 bg-gray-300 mx-auto"></div>
       </div>
       
@@ -26,20 +28,20 @@
         <!-- About text -->
         <div class="order-1 md:order-2 space-y-6">
           <div class="prose prose-lg max-w-none">
-            <p class="text-lg leading-relaxed text-gray-700 mb-6 epilogue">
-            Hey, ich bin <strong>Jonathan Millinger</strong>, ein junger Pop-Art- und Graffiti-Künstler aus dem Süden Deutschlands.
-            Seit 2024 entstehen meine Arbeiten vor allem auf  <strong>Pappelholz-Brettern</strong> – jedes Stück ein <strong>Unikat</strong>.
-            Meine Kunst lebt von kräftigen Farben, abstrakten Mustern und wird durch verschiedene Figuren oder Gegenstände im Comic-Design lebendig.
+            <p class="text-lg leading-relaxed text-gray-700 mb-6 epilogue" data-translate="about-text-1">
+              Hey, ich bin <strong>Jonathan Millinger</strong>, ein junger Pop-Art- und Graffiti-Künstler aus dem Süden Deutschlands.
+              Seit 2024 entstehen meine Arbeiten vor allem auf  <strong>Pappelholz-Brettern</strong> – jedes Stück ein <strong>Unikat</strong>.
+              Meine Kunst lebt von kräftigen Farben, abstrakten Mustern und wird durch verschiedene Figuren oder Gegenstände im Comic-Design lebendig.
             </p>
             
-            <p class="text-lg leading-relaxed text-gray-700 mb-6 epilogue">
-          Ich liebe es, neue Techniken auszuprobieren und mich künstlerisch immer wieder neu zu erfinden. 
-          Ob <strong>Spraydose, Acryl oder Mixed Media </strong>– für mich ist Kunst Entspannung und ein Weg, dem Alltag zu entfliehen.
-                      </p>
+            <p class="text-lg leading-relaxed text-gray-700 mb-6 epilogue" data-translate="about-text-2">
+              Ich liebe es, neue Techniken auszuprobieren und mich künstlerisch immer wieder neu zu erfinden. 
+              Ob <strong>Spraydose, Acryl oder Mixed Media </strong>– für mich ist Kunst Entspannung und ein Weg, dem Alltag zu entfliehen.
+            </p>
             
-            <p class="text-lg leading-relaxed text-gray-700 mb-8 epilogue">
-          Ich freue mich immer, neue Projekte und <strong>Auftragsarbeiten</strong> umzusetzen und dabei kreative Ideen zu verwirklichen. 
-          Außerdem bin ich gern unterwegs und besuche unterschiedliche <strong>Events</strong>, um meine Kunst zu teilen und mich inspirieren zu lassen.
+            <p class="text-lg leading-relaxed text-gray-700 mb-8 epilogue" data-translate="about-text-3">
+              Ich freue mich immer, neue Projekte und <strong>Auftragsarbeiten</strong> umzusetzen und dabei kreative Ideen zu verwirklichen. 
+              Außerdem bin ich gern unterwegs und besuche unterschiedliche <strong>Events</strong>, um meine Kunst zu teilen und mich inspirieren zu lassen.
             </p>
           </div>
 
@@ -47,8 +49,9 @@
           <!-- Call to action -->
           <div class="pt-6">
             <a href="#contact" 
-               class="inline-flex items-center bg-gray-900 hover:bg-gray-800 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300 epilogue">
-              Work with me
+               class="inline-flex items-center bg-gray-900 hover:bg-gray-800 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300 epilogue"
+               data-translate="work-with-me">
+              Arbeite mit mir
               <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
               </svg>

@@ -24,7 +24,7 @@ export const series = [
         year: "2024",
         price: "2.200",
         sold: true,
-        image: "/img/e68bfe80-964b-441e-93ce-21b4345d3f2d.jpg",
+        image: "/img/6bfbede9-a505-4f28-94b0-9f8410e92fed.jpg",
         description: "An intimate piece reflecting the heartbeat of metropolitan life, where traditional techniques meet contemporary urban expression."
       },
       {
@@ -35,7 +35,7 @@ export const series = [
         year: "2024",
         price: "3.200",
         sold: false,
-        image: "/img/e68bfe80-964b-441e-93ce-21b4345d3f2d.jpg",
+        image: "/img/9503f430-2a20-4ea4-8ec3-53a035f177fc.jpg",
         description: "Inspired by the electric atmosphere of nighttime cityscapes, this piece glows with the energy of urban illumination."
       }
     ]
@@ -53,7 +53,7 @@ export const series = [
         year: "2024",
         price: "4.500",
         sold: false,
-        image: "/img/e68bfe80-964b-441e-93ce-21b4345d3f2d.jpg",
+        image: "/img/portfolio-klein-1.jpg.jpg",
         description: "A large-scale composition that orchestrates multiple layers of urban imagery into a harmonious visual symphony."
       },
       {
@@ -80,9 +80,9 @@ export const series = [
         dimensions: "36 x 36 inches",
         medium: "mixed media",
         year: "2024",
-        price: "3.800",
+        price: "300",
         sold: false,
-        image: "/img/e68bfe80-964b-441e-93ce-21b4345d3f2d.jpg",
+        image: "/img/PHOTO-2025-08-10-13-37-06.jpg",
         description: "Square format piece that examines the intersection of nature and urban development in contemporary society."
       },
       {

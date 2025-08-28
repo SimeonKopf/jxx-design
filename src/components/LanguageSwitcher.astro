@@ -1,0 +1,250 @@
+---
+// src/components/LanguageSwitcher.astro
+---
+
+<div class="language-switcher">
+  <button 
+    id="language-toggle" 
+    class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-gray-700 hover:text-gray-900 px-3 py-2 rounded-full transition-all duration-300 text-sm font-medium"
+    aria-label="Switch Language"
+  >
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+    </svg>
+    <span id="current-language">DE</span>
+    <svg class="w-3 h-3 transition-transform duration-200" id="language-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+  
+  <!-- Language Options Dropdown -->
+  <div id="language-options" class="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[120px] opacity-0 scale-95 transform transition-all duration-200 pointer-events-none z-50">
+    <button 
+      data-lang="de" 
+      class="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors duration-200 text-sm font-medium text-gray-700 hover:text-gray-900 flex items-center space-x-2 first:rounded-t-lg epilogue"
+    >
+      <span class="text-lg">🇩🇪</span>
+      <span>DE</span>
+    </button>
+    <button 
+      data-lang="en" 
+      class="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors duration-200 text-sm font-medium text-gray-700 hover:text-gray-900 flex items-center space-x-2 last:rounded-b-lg border-t border-gray-100 epilogue"
+    >
+      <span class="text-lg">🇬🇧</span>
+      <span>EN</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  import { getTranslations, getCurrentLanguage } from '../data/languages.js';
+  
+  class LanguageManager {
+    constructor() {
+      this.currentLanguage = getCurrentLanguage();
+      this.init();
+    }
+    
+    init() {
+      this.setupEventListeners();
+      this.updateUI();
+      this.translatePage();
+    }
+    
+    setupEventListeners() {
+      const toggle = document.getElementById('language-toggle');
+      const options = document.getElementById('language-options');
+      const langButtons = document.querySelectorAll('[data-lang]');
+      
+      // Toggle dropdown
+      toggle?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleDropdown();
+      });
+      
+      // Language selection
+      langButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const lang = button.dataset.lang;
+          this.changeLanguage(lang);
+        });
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', () => {
+        this.closeDropdown();
+      });
+      
+      // Close dropdown on escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          this.closeDropdown();
+        }
+      });
+    }
+    
+    toggleDropdown() {
+      const options = document.getElementById('language-options');
+      const arrow = document.getElementById('language-arrow');
+      
+      if (options.classList.contains('opacity-0')) {
+        this.openDropdown();
+      } else {
+        this.closeDropdown();
+      }
+    }
+    
+    openDropdown() {
+      const options = document.getElementById('language-options');
+      const arrow = document.getElementById('language-arrow');
+      
+      options.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+      options.classList.add('opacity-100', 'scale-100');
+      arrow.classList.add('rotate-180');
+    }
+    
+    closeDropdown() {
+      const options = document.getElementById('language-options');
+      const arrow = document.getElementById('language-arrow');
+      
+      options.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+      options.classList.remove('opacity-100', 'scale-100');
+      arrow.classList.remove('rotate-180');
+    }
+    
+    changeLanguage(lang) {
+      if (lang !== this.currentLanguage) {
+        this.currentLanguage = lang;
+        localStorage.setItem('jxx-language', lang);
+        this.updateUI();
+        this.translatePage();
+      }
+      this.closeDropdown();
+    }
+    
+    updateUI() {
+      const currentLangSpan = document.getElementById('current-language');
+      if (currentLangSpan) {
+        currentLangSpan.textContent = this.currentLanguage.toUpperCase();
+      }
+      
+      // Update active state in dropdown
+      const langButtons = document.querySelectorAll('[data-lang]');
+      langButtons.forEach(button => {
+        if (button.dataset.lang === this.currentLanguage) {
+          button.classList.add('bg-gray-100', 'font-semibold');
+        } else {
+          button.classList.remove('bg-gray-100', 'font-semibold');
+        }
+      });
+    }
+    
+    translatePage() {
+      const translations = getTranslations(this.currentLanguage);
+      
+      // Navigation links
+      const navLinks = {
+        'nav a[href="/"]': translations.home,
+        'nav a[href="/#artworks"]': translations.artworks,
+        'nav a[href="/#about"]': translations.about,
+        'nav a[href="/#contact"]': translations.contact
+      };
+      
+      Object.entries(navLinks).forEach(([selector, text]) => {
+        const element = document.querySelector(selector);
+        if (element) {
+          element.textContent = text;
+        }
+      });
+      
+      // Hero section
+      const heroSubtitle = document.querySelector('[data-translate="subtitle"]');
+      if (heroSubtitle) {
+        heroSubtitle.textContent = translations.subtitle;
+      }
+      
+      // Gallery title
+      const galleryTitle = document.querySelector('[data-translate="gallery-title"]');
+      if (galleryTitle) {
+        galleryTitle.textContent = translations.galleryTitle;
+      }
+      
+      // About section
+      const aboutTitle = document.querySelector('[data-translate="about-title"]');
+      if (aboutTitle) {
+        aboutTitle.textContent = translations.aboutTitle;
+      }
+      
+      const aboutTexts = document.querySelectorAll('[data-translate^="about-text"]');
+      aboutTexts.forEach((element, index) => {
+        const key = `aboutText${index + 1}`;
+        if (translations[key]) {
+          element.innerHTML = translations[key];
+        }
+      });
+      
+      const workWithMe = document.querySelector('[data-translate="work-with-me"]');
+      if (workWithMe) {
+        workWithMe.textContent = translations.workWithMe;
+      }
+      
+      // Contact section
+      const contactTitle = document.querySelector('[data-translate="contact-title"]');
+      if (contactTitle) {
+        contactTitle.textContent = translations.contactTitle;
+      }
+      
+      const contactSubtitle = document.querySelector('[data-translate="contact-subtitle"]');
+      if (contactSubtitle) {
+        contactSubtitle.textContent = translations.contactSubtitle;
+      }
+      
+      // Form elements
+      const formElements = {
+        'label[for="name"]': translations.name + ' *',
+        'label[for="email"]': translations.email + ' *',
+        'label[for="subject"]': translations.subject,
+        'label[for="message"]': translations.message + ' *',
+        'input[name="name"]': { placeholder: translations.namePlaceholder },
+        'input[name="email"]': { placeholder: translations.emailPlaceholder },
+        'textarea[name="message"]': { placeholder: translations.messagePlaceholder },
+        'button[type="submit"]': translations.send
+      };
+      
+      Object.entries(formElements).forEach(([selector, value]) => {
+        const element = document.querySelector(selector);
+        if (element) {
+          if (typeof value === 'object') {
+            Object.entries(value).forEach(([attr, attrValue]) => {
+              element.setAttribute(attr, attrValue);
+            });
+          } else {
+            element.textContent = value;
+          }
+        }
+      });
+      
+      // Sold badges
+      const soldBadges = document.querySelectorAll('[data-translate="sold"]');
+      soldBadges.forEach(badge => {
+        badge.textContent = translations.sold;
+      });
+    }
+  }
+  
+  // Initialize when DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    new LanguageManager();
+  });
+</script>
+
+<style>
+  .language-switcher {
+    position: relative;
+  }
+  
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+</style>

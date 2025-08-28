@@ -1,21 +1,29 @@
 ---
-// Clean navigation component
+// src/components/Navigation.astro - Optimized for Astro v5
+import { Image } from 'astro:assets';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import logoImage from '../assets/logoJXX-modified.png';
 ---
 
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
   <div class="container mx-auto px-6 py-4">
     <div class="flex justify-between items-center">
-      <!-- Logo with image and text -->
+      <!-- Logo with optimized image -->
       <a href="/" class="flex items-center space-x-3 text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors duration-300 epilogue">
-        <img 
-          src="/img/logoJXX-modified.png" 
+        <Image 
+          src={logoImage}
           alt="JXX Design Logo" 
           class="w-16 h-16 object-contain"
+          format="webp"
+          quality={85}
+          loading="eager"
+          width={64}
+          height={64}
         />
       </a>
       
       <!-- Desktop Menu -->
-      <div class="hidden lg:flex space-x-8">
+      <div class="hidden lg:flex items-center space-x-8">
         <a href="/" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium epilogue">
           Home
         </a>
@@ -28,6 +36,11 @@
         <a href="/#contact" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium epilogue">
           Contact
         </a>
+        
+        <!-- Language Switcher for Desktop -->
+        <div class="ml-4">
+          <LanguageSwitcher />
+        </div>
       </div>
       
       <!-- Mobile menu button -->
@@ -53,6 +66,11 @@
         <a href="/#contact" class="text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-2 epilogue">
           Contact
         </a>
+        
+        <!-- Language Switcher for Mobile -->
+        <div class="pt-2 border-t border-gray-200">
+          <LanguageSwitcher />
+        </div>
       </div>
     </div>
   </div>

@@ -29,13 +29,15 @@ const { series, imageLeft = false } = Astro.props;
           <div class="carousel-track flex transition-transform duration-500 ease-in-out">
             {series.artworks.map((artwork, index) => (
               <div class="carousel-slide flex-shrink-0 w-full relative group cursor-pointer" data-artwork-id={artwork.id}>
-                <img 
-                  src={artwork.image} 
-                  alt={artwork.title}
-                  class="w-full h-80 object-cover"
-                />
-                <!-- Subtle overlay -->
-                <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent group-hover:from-black/10 transition-all duration-300"></div>
+                <a href={`/artwork/${artwork.id}`} class="block w-full h-full">
+                  <img 
+                    src={artwork.image} 
+                    alt={artwork.title}
+                    class="w-full h-80 object-cover"
+                  />
+                  <!-- Subtle overlay -->
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent group-hover:from-black/10 transition-all duration-300"></div>
+                </a>
                 {artwork.sold && (
                   <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm" data-translate="sold">
                     Sold
@@ -104,7 +106,7 @@ const { series, imageLeft = false } = Astro.props;
     </div>
   </div>
   
-  <!-- Mobile Layout with PERFECT SWIPING -->
+  <!-- Mobile Layout -->
   <div class="md:hidden px-4">
     <div class="space-y-4 max-w-md mx-auto">
       <!-- Series Title -->
@@ -119,12 +121,14 @@ const { series, imageLeft = false } = Astro.props;
             <div class="mobile-carousel-track flex transition-transform duration-300 ease-out" style="transform: translateX(0%);">
               {series.artworks.map((artwork, index) => (
                 <div class="mobile-carousel-slide flex-shrink-0 w-full relative select-none" data-artwork-id={artwork.id} data-slide-index={index}>
-                  <img 
-                    src={artwork.image} 
-                    alt={artwork.title}
-                    class="w-full h-72 object-cover pointer-events-none"
-                    draggable="false"
-                  />
+                  <div class="artwork-link w-full h-full cursor-pointer" data-href={`/artwork/${artwork.id}`}>
+                    <img 
+                      src={artwork.image} 
+                      alt={artwork.title}
+                      class="w-full h-72 object-cover pointer-events-none"
+                      draggable="false"
+                    />
+                  </div>
                   {artwork.sold && (
                     <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm" data-translate="sold">
                       Sold
@@ -137,12 +141,12 @@ const { series, imageLeft = false } = Astro.props;
             <!-- Mobile Navigation Arrows -->
             {series.artworks.length > 1 && (
               <>
-                <button class="mobile-carousel-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md transition-all duration-300 z-10 touch-manipulation">
+                <button class="mobile-carousel-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md transition-all duration-300 z-10">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                   </svg>
                 </button>
-                <button class="mobile-carousel-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md transition-all duration-300 z-10 touch-manipulation">
+                <button class="mobile-carousel-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md transition-all duration-300 z-10">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
@@ -188,7 +192,7 @@ const { series, imageLeft = false } = Astro.props;
   </div>
 </div>
 
-<script>
+<script type="module">
   document.addEventListener('DOMContentLoaded', function() {
     // Initialize all carousels
     const carousels = document.querySelectorAll('.carousel-wrapper, .mobile-carousel-wrapper');
@@ -204,11 +208,14 @@ const { series, imageLeft = false } = Astro.props;
     const dots = carousel.parentElement.querySelectorAll('.dot, .mobile-dot');
     const prevButton = carousel.querySelector('.carousel-prev, .mobile-carousel-prev');
     const nextButton = carousel.querySelector('.carousel-next, .mobile-carousel-next');
-    const seriesId = carousel.dataset.series;
     const isMobile = carousel.classList.contains('mobile-carousel-wrapper');
     
     let currentIndex = 0;
     let isAnimating = false;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let hasMoved = false;
     
     // Update carousel position and UI
     function updateCarousel(animate = true) {
@@ -217,7 +224,7 @@ const { series, imageLeft = false } = Astro.props;
         track.style.transition = 'transform 300ms ease-out';
         setTimeout(() => {
           isAnimating = false;
-        }, 300);
+        }, 350);
       } else {
         track.style.transition = 'none';
       }
@@ -254,7 +261,7 @@ const { series, imageLeft = false } = Astro.props;
     }
     
     // Navigation functions
-    function goToSlide(index) {
+    function goToSlide(index, animate = true) {
       if (isAnimating || index === currentIndex) return;
       
       if (index >= slides.length) {
@@ -264,7 +271,7 @@ const { series, imageLeft = false } = Astro.props;
       } else {
         currentIndex = index;
       }
-      updateCarousel();
+      updateCarousel(animate);
     }
     
     function nextSlide() {
@@ -275,15 +282,9 @@ const { series, imageLeft = false } = Astro.props;
       goToSlide(currentIndex - 1);
     }
     
-    // Arrow button navigation
+    // Arrow button events
     if (prevButton) {
       prevButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        prevSlide();
-      });
-      
-      prevButton.addEventListener('touchend', function(e) {
         e.preventDefault();
         e.stopPropagation();
         prevSlide();
@@ -292,12 +293,6 @@ const { series, imageLeft = false } = Astro.props;
     
     if (nextButton) {
       nextButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        nextSlide();
-      });
-      
-      nextButton.addEventListener('touchend', function(e) {
         e.preventDefault();
         e.stopPropagation();
         nextSlide();
@@ -311,175 +306,101 @@ const { series, imageLeft = false } = Astro.props;
         e.stopPropagation();
         goToSlide(index);
       });
-      
-      dot.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        goToSlide(index);
-      });
     });
     
-    // PERFECT MOBILE SWIPE HANDLING
+    // Mobile touch events
     if (isMobile) {
-      let startX = null;
-      let startY = null;
-      let currentX = null;
-      let isDragging = false;
-      let isHorizontalSwipe = false;
-      let startTime = null;
+      const artworkLinks = carousel.querySelectorAll('.artwork-link');
       
-      function handleTouchStart(e) {
+      // Touch handling for swipe
+      track.addEventListener('touchstart', function(e) {
         if (isAnimating) return;
         
         const touch = e.touches[0];
         startX = touch.clientX;
         startY = touch.clientY;
-        currentX = startX;
         isDragging = false;
-        isHorizontalSwipe = false;
-        startTime = Date.now();
+        hasMoved = false;
         
         track.style.transition = 'none';
-      }
+      }, { passive: true });
       
-      function handleTouchMove(e) {
-        if (!startX || !startY || isAnimating) return;
+      track.addEventListener('touchmove', function(e) {
+        if (isAnimating) return;
         
         const touch = e.touches[0];
-        currentX = touch.clientX;
-        const currentY = touch.clientY;
+        const deltaX = touch.clientX - startX;
+        const deltaY = touch.clientY - startY;
         
-        const deltaX = currentX - startX;
-        const deltaY = currentY - startY;
-        const absDeltaX = Math.abs(deltaX);
-        const absDeltaY = Math.abs(deltaY);
-        
-        // Determine if this is a horizontal swipe
-        if (!isDragging && !isHorizontalSwipe) {
-          if (absDeltaX > 10 || absDeltaY > 10) {
-            if (absDeltaX > absDeltaY && absDeltaX > 10) {
-              isHorizontalSwipe = true;
-              isDragging = true;
-              e.preventDefault();
-            } else if (absDeltaY > absDeltaX) {
-              // Vertical scroll - let it happen
-              return;
-            }
+        // Determine if horizontal swipe
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+          if (!isDragging) {
+            isDragging = true;
+            e.preventDefault();
           }
-        }
-        
-        if (isDragging && isHorizontalSwipe) {
-          e.preventDefault();
+          hasMoved = true;
           
-          // Calculate drag with boundaries
+          // Visual drag feedback
           const containerWidth = track.offsetWidth;
           const dragPercentage = (deltaX / containerWidth) * 100;
           const baseTranslate = -currentIndex * 100;
-          let newTranslate = baseTranslate + dragPercentage;
-          
-          // Add resistance at boundaries
-          const maxTranslate = 0;
-          const minTranslate = -(slides.length - 1) * 100;
-          
-          if (newTranslate > maxTranslate) {
-            newTranslate = maxTranslate + (newTranslate - maxTranslate) * 0.3;
-          } else if (newTranslate < minTranslate) {
-            newTranslate = minTranslate + (newTranslate - minTranslate) * 0.3;
-          }
+          const newTranslate = baseTranslate + dragPercentage;
           
           track.style.transform = `translateX(${newTranslate}%)`;
         }
-      }
+      }, { passive: false });
       
-      function handleTouchEnd(e) {
-        if (!startX || !isDragging || !isHorizontalSwipe || isAnimating) {
-          resetTouchState();
-          return;
-        }
+      track.addEventListener('touchend', function(e) {
+        if (isAnimating) return;
         
-        const deltaX = currentX - startX;
-        const deltaTime = Date.now() - startTime;
-        const velocity = Math.abs(deltaX) / deltaTime; // pixels per ms
-        const absDeltaX = Math.abs(deltaX);
-        
-        // Determine if we should change slides
-        const threshold = 50; // minimum drag distance
-        const velocityThreshold = 0.3; // minimum velocity for quick swipe
-        
-        let shouldChangeSlide = false;
-        let direction = 0;
-        
-        if (absDeltaX > threshold || velocity > velocityThreshold) {
-          shouldChangeSlide = true;
-          direction = deltaX > 0 ? -1 : 1; // swipe right = previous (-1), swipe left = next (1)
-        }
-        
-        if (shouldChangeSlide) {
-          const newIndex = currentIndex + direction;
-          if (newIndex >= 0 && newIndex < slides.length) {
-            goToSlide(newIndex);
+        if (isDragging && hasMoved) {
+          const touch = e.changedTouches[0];
+          const deltaX = touch.clientX - startX;
+          const threshold = 50;
+          
+          if (Math.abs(deltaX) > threshold) {
+            if (deltaX > 0) {
+              prevSlide();
+            } else {
+              nextSlide();
+            }
           } else {
-            // Snap back if at boundaries
             updateCarousel();
           }
-        } else {
-          // Snap back to current slide
-          updateCarousel();
         }
         
-        resetTouchState();
-      }
-      
-      function resetTouchState() {
-        startX = null;
-        startY = null;
-        currentX = null;
         isDragging = false;
-        isHorizontalSwipe = false;
-        startTime = null;
-      }
+        hasMoved = false;
+      }, { passive: true });
       
-      // Add touch events to the track
-      track.addEventListener('touchstart', handleTouchStart, { passive: true });
-      track.addEventListener('touchmove', handleTouchMove, { passive: false });
-      track.addEventListener('touchend', handleTouchEnd, { passive: true });
-      track.addEventListener('touchcancel', resetTouchState, { passive: true });
-      
-      // Prevent context menu
-      track.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
+      // Click handling for artwork navigation
+      artworkLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          if (!hasMoved && !isDragging) {
+            const href = this.dataset.href;
+            if (href) {
+              window.location.href = href;
+            }
+          }
+        });
       });
     }
     
-    // Click to view artwork (but not when dragging on mobile)
-    slides.forEach((slide, index) => {
-      let clickStartTime = 0;
-      
-      slide.addEventListener('mousedown', () => {
-        clickStartTime = Date.now();
-      });
-      
-      slide.addEventListener('touchstart', () => {
-        clickStartTime = Date.now();
-      });
-      
-      slide.addEventListener('click', function(e) {
-        const clickDuration = Date.now() - clickStartTime;
-        if ((!isMobile || !isDragging) && clickDuration < 300) {
-          const artworkId = this.dataset.artworkId;
-          window.location.href = `/artwork/${artworkId}`;
+    // Desktop click handling
+    if (!isMobile) {
+      slides.forEach(slide => {
+        const link = slide.querySelector('a');
+        if (link) {
+          slide.addEventListener('click', function(e) {
+            if (e.target.closest('button')) {
+              e.preventDefault();
+              return;
+            }
+            // Let the link handle the navigation naturally
+          });
         }
       });
-      
-      slide.addEventListener('touchend', function(e) {
-        const clickDuration = Date.now() - clickStartTime;
-        if (!isDragging && clickDuration < 300 && Math.abs(currentX - startX) < 10) {
-          e.preventDefault();
-          const artworkId = this.dataset.artworkId;
-          window.location.href = `/artwork/${artworkId}`;
-        }
-      });
-    });
+    }
     
     // Initialize
     updateCarousel(false);
@@ -492,6 +413,11 @@ const { series, imageLeft = false } = Astro.props;
     will-change: transform;
   }
   
+  .mobile-carousel-slide {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
   
   .mobile-carousel-container {
     user-select: none;
@@ -499,12 +425,9 @@ const { series, imageLeft = false } = Astro.props;
     -webkit-touch-callout: none;
   }
   
-  .touch-manipulation {
-    touch-action: manipulation;
-  }
-  
-  .select-none {
-    user-select: none;
-    -webkit-user-select: none;
+  .artwork-link {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 </style>

@@ -37,7 +37,7 @@ const { series, imageLeft = false } = Astro.props;
                 <!-- Subtle overlay -->
                 <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent group-hover:from-black/10 transition-all duration-300"></div>
                 {artwork.sold && (
-                  <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
+                  <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm" data-translate="sold">
                     Sold
                   </div>
                 )}
@@ -45,7 +45,7 @@ const { series, imageLeft = false } = Astro.props;
             ))}
           </div>
           
-          <!-- Navigation Arrows - ALWAYS VISIBLE -->
+          <!-- Navigation Arrows -->
           {series.artworks.length > 1 && (
             <>
               <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-2 shadow-md transition-all duration-300 z-10">
@@ -83,7 +83,7 @@ const { series, imageLeft = false } = Astro.props;
           <h3 class="text-2xl font-bold text-gray-900 mb-4 epilogue">{series.title}</h3>
         </div>
         
-        <!-- Dynamic Artwork Info - No Box, Text Aligned -->
+        <!-- Dynamic Artwork Info -->
         <div class="artwork-info">
           {series.artworks.map((artwork, index) => (
             <div class={`artwork-details ${index === 0 ? 'block' : 'hidden'}`} data-artwork-index={index}>
@@ -94,7 +94,7 @@ const { series, imageLeft = false } = Astro.props;
                   <div class="text-base font-medium text-gray-900 epilogue">€{artwork.price}</div>
                 )}
                 {artwork.sold && (
-                  <div class="text-base font-medium text-gray-900 epilogue">Sold</div>
+                  <div class="text-base font-medium text-gray-900 epilogue" data-translate="sold">Sold</div>
                 )}
               </div>
             </div>
@@ -104,7 +104,7 @@ const { series, imageLeft = false } = Astro.props;
     </div>
   </div>
   
-  <!-- Mobile Layout with FIXED SWIPING -->
+  <!-- Mobile Layout with PERFECT SWIPING -->
   <div class="md:hidden px-4">
     <div class="space-y-4 max-w-md mx-auto">
       <!-- Series Title -->
@@ -112,13 +112,13 @@ const { series, imageLeft = false } = Astro.props;
         <h3 class="text-xl font-bold text-gray-900 mb-4 epilogue">{series.title}</h3>
       </div>
       
-      <!-- Mobile Carousel with Better Touch Handling -->
+      <!-- Mobile Carousel -->
       <div class="mobile-carousel-container">
-        <div class="relative bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 mx-auto touch-pan-y">
+        <div class="relative bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 mx-auto">
           <div class="mobile-carousel-wrapper relative" data-series={`${series.id}-mobile`}>
-            <div class="mobile-carousel-track flex transition-transform duration-300 ease-out">
+            <div class="mobile-carousel-track flex transition-transform duration-300 ease-out" style="transform: translateX(0%);">
               {series.artworks.map((artwork, index) => (
-                <div class="mobile-carousel-slide flex-shrink-0 w-full relative cursor-pointer select-none" data-artwork-id={artwork.id}>
+                <div class="mobile-carousel-slide flex-shrink-0 w-full relative select-none" data-artwork-id={artwork.id} data-slide-index={index}>
                   <img 
                     src={artwork.image} 
                     alt={artwork.title}
@@ -126,7 +126,7 @@ const { series, imageLeft = false } = Astro.props;
                     draggable="false"
                   />
                   {artwork.sold && (
-                    <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
+                    <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm" data-translate="sold">
                       Sold
                     </div>
                   )}
@@ -134,15 +134,15 @@ const { series, imageLeft = false } = Astro.props;
               ))}
             </div>
             
-            <!-- Mobile Navigation Arrows - ALWAYS VISIBLE -->
+            <!-- Mobile Navigation Arrows -->
             {series.artworks.length > 1 && (
               <>
-                <button class="mobile-carousel-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md transition-all duration-300 z-10">
+                <button class="mobile-carousel-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md transition-all duration-300 z-10 touch-manipulation">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                   </svg>
                 </button>
-                <button class="mobile-carousel-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md transition-all duration-300 z-10">
+                <button class="mobile-carousel-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md transition-all duration-300 z-10 touch-manipulation">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
@@ -156,7 +156,7 @@ const { series, imageLeft = false } = Astro.props;
             <div class="flex justify-center space-x-1.5 py-3 bg-white">
               {series.artworks.map((_, index) => (
                 <div 
-                  class={`mobile-dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'}`}
+                  class={`mobile-dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'} cursor-pointer`}
                   data-index={index}
                 ></div>
               ))}
@@ -177,7 +177,7 @@ const { series, imageLeft = false } = Astro.props;
                   <div class="text-sm font-medium text-gray-900">€{artwork.price}</div>
                 )}
                 {artwork.sold && (
-                  <div class="text-sm font-medium text-gray-900">Sold</div>
+                  <div class="text-sm font-medium text-gray-900" data-translate="sold">Sold</div>
                 )}
               </div>
             </div>
@@ -208,9 +208,20 @@ const { series, imageLeft = false } = Astro.props;
     const isMobile = carousel.classList.contains('mobile-carousel-wrapper');
     
     let currentIndex = 0;
+    let isAnimating = false;
     
     // Update carousel position and UI
-    function updateCarousel() {
+    function updateCarousel(animate = true) {
+      if (animate) {
+        isAnimating = true;
+        track.style.transition = 'transform 300ms ease-out';
+        setTimeout(() => {
+          isAnimating = false;
+        }, 300);
+      } else {
+        track.style.transition = 'none';
+      }
+      
       const translateX = -currentIndex * 100;
       track.style.transform = `translateX(${translateX}%)`;
       
@@ -242,8 +253,10 @@ const { series, imageLeft = false } = Astro.props;
       }
     }
     
-    // Navigation functions with infinite loop
+    // Navigation functions
     function goToSlide(index) {
+      if (isAnimating || index === currentIndex) return;
+      
       if (index >= slides.length) {
         currentIndex = 0;
       } else if (index < 0) {
@@ -262,9 +275,15 @@ const { series, imageLeft = false } = Astro.props;
       goToSlide(currentIndex - 1);
     }
     
-    // Arrow button navigation (both desktop and mobile)
+    // Arrow button navigation
     if (prevButton) {
       prevButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        prevSlide();
+      });
+      
+      prevButton.addEventListener('touchend', function(e) {
         e.preventDefault();
         e.stopPropagation();
         prevSlide();
@@ -273,6 +292,12 @@ const { series, imageLeft = false } = Astro.props;
     
     if (nextButton) {
       nextButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        nextSlide();
+      });
+      
+      nextButton.addEventListener('touchend', function(e) {
         e.preventDefault();
         e.stopPropagation();
         nextSlide();
@@ -286,156 +311,200 @@ const { series, imageLeft = false } = Astro.props;
         e.stopPropagation();
         goToSlide(index);
       });
+      
+      dot.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        goToSlide(index);
+      });
     });
     
-    // IMPROVED MOBILE SWIPE HANDLING
+    // PERFECT MOBILE SWIPE HANDLING
     if (isMobile) {
-      let touchStartX = null;
-      let touchStartY = null;
-      let touchStartTime = null;
+      let startX = null;
+      let startY = null;
+      let currentX = null;
       let isDragging = false;
-      let isVerticalScroll = false;
+      let isHorizontalSwipe = false;
+      let startTime = null;
       
       function handleTouchStart(e) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        touchStartTime = Date.now();
-        isDragging = false;
-        isVerticalScroll = false;
+        if (isAnimating) return;
         
-        // Disable transition during drag
+        const touch = e.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+        currentX = startX;
+        isDragging = false;
+        isHorizontalSwipe = false;
+        startTime = Date.now();
+        
         track.style.transition = 'none';
       }
       
       function handleTouchMove(e) {
-        if (!touchStartX || !touchStartY) return;
+        if (!startX || !startY || isAnimating) return;
         
-        const touchX = e.touches[0].clientX;
-        const touchY = e.touches[0].clientY;
-        const deltaX = touchX - touchStartX;
-        const deltaY = touchY - touchStartY;
+        const touch = e.touches[0];
+        currentX = touch.clientX;
+        const currentY = touch.clientY;
         
-        // Determine scroll direction on first significant movement
-        if (!isDragging && !isVerticalScroll) {
-          const absDeltaX = Math.abs(deltaX);
-          const absDeltaY = Math.abs(deltaY);
-          
+        const deltaX = currentX - startX;
+        const deltaY = currentY - startY;
+        const absDeltaX = Math.abs(deltaX);
+        const absDeltaY = Math.abs(deltaY);
+        
+        // Determine if this is a horizontal swipe
+        if (!isDragging && !isHorizontalSwipe) {
           if (absDeltaX > 10 || absDeltaY > 10) {
-            if (absDeltaX > absDeltaY) {
-              // Horizontal swipe - start dragging
+            if (absDeltaX > absDeltaY && absDeltaX > 10) {
+              isHorizontalSwipe = true;
               isDragging = true;
-              e.preventDefault(); // Prevent page scroll
-            } else {
+              e.preventDefault();
+            } else if (absDeltaY > absDeltaX) {
               // Vertical scroll - let it happen
-              isVerticalScroll = true;
-              track.style.transition = '';
               return;
             }
           }
         }
         
-        if (isDragging) {
+        if (isDragging && isHorizontalSwipe) {
           e.preventDefault();
           
-          // Calculate drag percentage
+          // Calculate drag with boundaries
           const containerWidth = track.offsetWidth;
           const dragPercentage = (deltaX / containerWidth) * 100;
-          const currentTranslate = -currentIndex * 100;
-          const newTranslate = currentTranslate + dragPercentage;
+          const baseTranslate = -currentIndex * 100;
+          let newTranslate = baseTranslate + dragPercentage;
+          
+          // Add resistance at boundaries
+          const maxTranslate = 0;
+          const minTranslate = -(slides.length - 1) * 100;
+          
+          if (newTranslate > maxTranslate) {
+            newTranslate = maxTranslate + (newTranslate - maxTranslate) * 0.3;
+          } else if (newTranslate < minTranslate) {
+            newTranslate = minTranslate + (newTranslate - minTranslate) * 0.3;
+          }
           
           track.style.transform = `translateX(${newTranslate}%)`;
         }
       }
       
       function handleTouchEnd(e) {
-        if (!touchStartX || isVerticalScroll) {
+        if (!startX || !isDragging || !isHorizontalSwipe || isAnimating) {
           resetTouchState();
           return;
         }
         
-        const touchEndX = e.changedTouches[0].clientX;
-        const touchEndTime = Date.now();
-        const deltaX = touchEndX - touchStartX;
-        const deltaTime = touchEndTime - touchStartTime;
+        const deltaX = currentX - startX;
+        const deltaTime = Date.now() - startTime;
         const velocity = Math.abs(deltaX) / deltaTime; // pixels per ms
+        const absDeltaX = Math.abs(deltaX);
         
-        // Re-enable transition
-        track.style.transition = '';
+        // Determine if we should change slides
+        const threshold = 50; // minimum drag distance
+        const velocityThreshold = 0.3; // minimum velocity for quick swipe
         
-        if (isDragging) {
-          const threshold = 50; // minimum distance for swipe
-          const velocityThreshold = 0.5; // minimum velocity for quick swipe
-          
-          if (Math.abs(deltaX) > threshold || velocity > velocityThreshold) {
-            if (deltaX > 0) {
-              // Swipe right = previous
-              prevSlide();
-            } else {
-              // Swipe left = next
-              nextSlide();
-            }
+        let shouldChangeSlide = false;
+        let direction = 0;
+        
+        if (absDeltaX > threshold || velocity > velocityThreshold) {
+          shouldChangeSlide = true;
+          direction = deltaX > 0 ? -1 : 1; // swipe right = previous (-1), swipe left = next (1)
+        }
+        
+        if (shouldChangeSlide) {
+          const newIndex = currentIndex + direction;
+          if (newIndex >= 0 && newIndex < slides.length) {
+            goToSlide(newIndex);
           } else {
-            // Not enough distance/velocity, snap back
+            // Snap back if at boundaries
             updateCarousel();
           }
+        } else {
+          // Snap back to current slide
+          updateCarousel();
         }
         
         resetTouchState();
       }
       
       function resetTouchState() {
-        touchStartX = null;
-        touchStartY = null;
-        touchStartTime = null;
+        startX = null;
+        startY = null;
+        currentX = null;
         isDragging = false;
-        isVerticalScroll = false;
-        track.style.transition = '';
+        isHorizontalSwipe = false;
+        startTime = null;
       }
       
-      // Add touch event listeners with proper options
-      const carouselElement = carousel.querySelector('.mobile-carousel-track');
-      carouselElement.addEventListener('touchstart', handleTouchStart, { passive: true });
-      carouselElement.addEventListener('touchmove', handleTouchMove, { passive: false });
-      carouselElement.addEventListener('touchend', handleTouchEnd, { passive: true });
-      carouselElement.addEventListener('touchcancel', resetTouchState, { passive: true });
+      // Add touch events to the track
+      track.addEventListener('touchstart', handleTouchStart, { passive: true });
+      track.addEventListener('touchmove', handleTouchMove, { passive: false });
+      track.addEventListener('touchend', handleTouchEnd, { passive: true });
+      track.addEventListener('touchcancel', resetTouchState, { passive: true });
       
-      // Prevent context menu on long press
-      carouselElement.addEventListener('contextmenu', function(e) {
+      // Prevent context menu
+      track.addEventListener('contextmenu', function(e) {
         e.preventDefault();
       });
     }
     
     // Click to view artwork (but not when dragging on mobile)
-    slides.forEach(slide => {
+    slides.forEach((slide, index) => {
+      let clickStartTime = 0;
+      
+      slide.addEventListener('mousedown', () => {
+        clickStartTime = Date.now();
+      });
+      
+      slide.addEventListener('touchstart', () => {
+        clickStartTime = Date.now();
+      });
+      
       slide.addEventListener('click', function(e) {
-        // Only navigate if not dragging on mobile
-        if (!isMobile || !isDragging) {
+        const clickDuration = Date.now() - clickStartTime;
+        if ((!isMobile || !isDragging) && clickDuration < 300) {
+          const artworkId = this.dataset.artworkId;
+          window.location.href = `/artwork/${artworkId}`;
+        }
+      });
+      
+      slide.addEventListener('touchend', function(e) {
+        const clickDuration = Date.now() - clickStartTime;
+        if (!isDragging && clickDuration < 300 && Math.abs(currentX - startX) < 10) {
+          e.preventDefault();
           const artworkId = this.dataset.artworkId;
           window.location.href = `/artwork/${artworkId}`;
         }
       });
     });
+    
+    // Initialize
+    updateCarousel(false);
   }
 </script>
 
 <style>
   .mobile-carousel-track {
-    touch-action: pan-y; /* Allow vertical scrolling, handle horizontal manually */
+    touch-action: pan-y;
+    will-change: transform;
   }
   
-  .mobile-carousel-slide {
-    user-select: none;
-  }
   
   .mobile-carousel-container {
-    /* Prevent text selection during swipe */
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
   
-  .touch-pan-y {
-    touch-action: pan-y;
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+  
+  .select-none {
+    user-select: none;
+    -webkit-user-select: none;
   }
 </style>

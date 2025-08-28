@@ -1,37 +1,37 @@
 ---
-// src/components/LanguageSwitcher.astro
+// src/components/LanguageSwitcher.astro - Fixed for mobile
 ---
 
 <div class="language-switcher">
   <button 
     id="language-toggle" 
-    class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-gray-700 hover:text-gray-900 px-3 py-2 rounded-full transition-all duration-300 text-sm font-medium"
+    class="flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-gray-700 hover:text-gray-900 px-3 py-2 rounded-full transition-all duration-300 text-sm font-medium epilogue touch-manipulation"
     aria-label="Switch Language"
   >
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
     </svg>
-    <span id="current-language">DE</span>
-    <svg class="w-3 h-3 transition-transform duration-200" id="language-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <span id="current-language" class="epilogue">DE</span>
+    <svg class="w-3 h-3 transition-transform duration-200 epilogue" id="language-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
     </svg>
   </button>
   
   <!-- Language Options Dropdown -->
-  <div id="language-options" class="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[120px] opacity-0 scale-95 transform transition-all duration-200 pointer-events-none z-50">
+  <div id="language-options" class="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[100px] opacity-0 scale-95 transform transition-all duration-200 pointer-events-none z-50">
     <button 
       data-lang="de" 
-      class="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors duration-200 text-sm font-medium text-gray-700 hover:text-gray-900 flex items-center space-x-2 first:rounded-t-lg epilogue"
+      class="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors duration-200 text-sm font-medium text-gray-700 hover:text-gray-900 flex items-center space-x-2 first:rounded-t-lg epilogue touch-manipulation select-none"
     >
       <span class="text-lg">🇩🇪</span>
-      <span>DE</span>
+      <span class="epilogue">DE</span>
     </button>
     <button 
       data-lang="en" 
-      class="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors duration-200 text-sm font-medium text-gray-700 hover:text-gray-900 flex items-center space-x-2 last:rounded-b-lg border-t border-gray-100 epilogue"
+      class="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors duration-200 text-sm font-medium text-gray-700 hover:text-gray-900 flex items-center space-x-2 last:rounded-b-lg border-t border-gray-100 epilogue touch-manipulation select-none"
     >
       <span class="text-lg">🇬🇧</span>
-      <span>EN</span>
+      <span class="epilogue">EN</span>
     </button>
   </div>
 </div>
@@ -56,15 +56,31 @@
       const options = document.getElementById('language-options');
       const langButtons = document.querySelectorAll('[data-lang]');
       
-      // Toggle dropdown
+      // Toggle dropdown with touch support
       toggle?.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         this.toggleDropdown();
       });
       
-      // Language selection
+      // Touch event for mobile
+      toggle?.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleDropdown();
+      });
+      
+      // Language selection with touch support
       langButtons.forEach(button => {
         button.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const lang = button.dataset.lang;
+          this.changeLanguage(lang);
+        });
+        
+        button.addEventListener('touchend', (e) => {
+          e.preventDefault();
           e.stopPropagation();
           const lang = button.dataset.lang;
           this.changeLanguage(lang);
@@ -72,8 +88,16 @@
       });
       
       // Close dropdown when clicking outside
-      document.addEventListener('click', () => {
-        this.closeDropdown();
+      document.addEventListener('click', (e) => {
+        if (!toggle?.contains(e.target) && !options?.contains(e.target)) {
+          this.closeDropdown();
+        }
+      });
+      
+      document.addEventListener('touchend', (e) => {
+        if (!toggle?.contains(e.target) && !options?.contains(e.target)) {
+          this.closeDropdown();
+        }
       });
       
       // Close dropdown on escape
@@ -86,7 +110,6 @@
     
     toggleDropdown() {
       const options = document.getElementById('language-options');
-      const arrow = document.getElementById('language-arrow');
       
       if (options.classList.contains('opacity-0')) {
         this.openDropdown();
@@ -158,70 +181,25 @@
         }
       });
       
-      // Hero section
-      const heroSubtitle = document.querySelector('[data-translate="subtitle"]');
-      if (heroSubtitle) {
-        heroSubtitle.textContent = translations.subtitle;
-      }
-      
-      // Gallery title
-      const galleryTitle = document.querySelector('[data-translate="gallery-title"]');
-      if (galleryTitle) {
-        galleryTitle.textContent = translations.galleryTitle;
-      }
-      
-      // About section
-      const aboutTitle = document.querySelector('[data-translate="about-title"]');
-      if (aboutTitle) {
-        aboutTitle.textContent = translations.aboutTitle;
-      }
-      
-      const aboutTexts = document.querySelectorAll('[data-translate^="about-text"]');
-      aboutTexts.forEach((element, index) => {
-        const key = `aboutText${index + 1}`;
+      // All elements with data-translate attributes
+      const translateElements = document.querySelectorAll('[data-translate]');
+      translateElements.forEach(element => {
+        const key = element.getAttribute('data-translate');
         if (translations[key]) {
-          element.innerHTML = translations[key];
+          if (key.includes('about-text')) {
+            element.innerHTML = translations[key];
+          } else {
+            element.textContent = translations[key];
+          }
         }
       });
       
-      const workWithMe = document.querySelector('[data-translate="work-with-me"]');
-      if (workWithMe) {
-        workWithMe.textContent = translations.workWithMe;
-      }
-      
-      // Contact section
-      const contactTitle = document.querySelector('[data-translate="contact-title"]');
-      if (contactTitle) {
-        contactTitle.textContent = translations.contactTitle;
-      }
-      
-      const contactSubtitle = document.querySelector('[data-translate="contact-subtitle"]');
-      if (contactSubtitle) {
-        contactSubtitle.textContent = translations.contactSubtitle;
-      }
-      
-      // Form elements
-      const formElements = {
-        'label[for="name"]': translations.name + ' *',
-        'label[for="email"]': translations.email + ' *',
-        'label[for="subject"]': translations.subject,
-        'label[for="message"]': translations.message + ' *',
-        'input[name="name"]': { placeholder: translations.namePlaceholder },
-        'input[name="email"]': { placeholder: translations.emailPlaceholder },
-        'textarea[name="message"]': { placeholder: translations.messagePlaceholder },
-        'button[type="submit"]': translations.send
-      };
-      
-      Object.entries(formElements).forEach(([selector, value]) => {
-        const element = document.querySelector(selector);
-        if (element) {
-          if (typeof value === 'object') {
-            Object.entries(value).forEach(([attr, attrValue]) => {
-              element.setAttribute(attr, attrValue);
-            });
-          } else {
-            element.textContent = value;
-          }
+      // Form placeholders
+      const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+      placeholderElements.forEach(element => {
+        const key = element.getAttribute('data-translate-placeholder').replace('-', '');
+        if (translations[key + 'Placeholder']) {
+          element.placeholder = translations[key + 'Placeholder'];
         }
       });
       
@@ -246,5 +224,13 @@
   
   .rotate-180 {
     transform: rotate(180deg);
+  }
+  
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+  
+  .select-none {
+    user-select: none;
   }
 </style>

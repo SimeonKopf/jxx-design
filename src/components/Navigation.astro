@@ -1,14 +1,13 @@
 ---
-// src/components/Navigation.astro - Optimized for Astro v5
+// src/components/Navigation.astro - Fixed with auto-close mobile menu
 import { Image } from 'astro:assets';
-import LanguageSwitcher from './LanguageSwitcher.astro';
 import logoImage from '../assets/logoJXX-modified.png';
 ---
 
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
   <div class="container mx-auto px-6 py-4">
     <div class="flex justify-between items-center">
-      <!-- Logo with optimized image -->
+      <!-- Logo -->
       <a href="/" class="flex items-center space-x-3 text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors duration-300 epilogue">
         <Image 
           src={logoImage}
@@ -37,14 +36,23 @@ import logoImage from '../assets/logoJXX-modified.png';
           Contact
         </a>
         
-        <!-- Language Switcher for Desktop -->
-        <div class="ml-4">
-          <LanguageSwitcher />
+        <!-- Desktop Language Switcher -->
+        <div class="ml-4 relative">
+          <button id="desktop-lang-btn" class="bg-white/10 backdrop-blur-sm border border-gray-300 hover:bg-gray-50 text-gray-700 px-3 py-2 rounded-full text-sm font-medium epilogue flex items-center space-x-1">
+            <span id="desktop-lang-text">DE</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div id="desktop-lang-menu" class="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-lg shadow-xl w-20 hidden z-[60]">
+            <button class="desktop-lang-option w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg epilogue" data-lang="de">🇩🇪 DE</button>
+            <button class="desktop-lang-option w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg border-t border-gray-100 epilogue" data-lang="en">🇬🇧 EN</button>
+          </div>
         </div>
       </div>
       
       <!-- Mobile menu button -->
-      <button id="mobile-menu-button" class="lg:hidden text-gray-700 hover:text-gray-900 transition-colors duration-300 p-2">
+      <button id="mobile-menu-button" class="lg:hidden text-gray-700 hover:text-gray-900 transition-colors duration-300 p-2 z-[60]">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
@@ -54,22 +62,30 @@ import logoImage from '../assets/logoJXX-modified.png';
     <!-- Mobile menu -->
     <div id="mobile-menu" class="lg:hidden hidden mt-4 pb-4 border-t border-gray-200 pt-4">
       <div class="flex flex-col space-y-4">
-        <a href="/" class="text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-2 epilogue">
+        <a href="/" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue">
           Home
         </a>
-        <a href="/#artworks" class="text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-2 epilogue">
+        <a href="/#artworks" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue">
           Artworks
         </a>
-        <a href="/#about" class="text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-2 epilogue">
+        <a href="/#about" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue">
           About
         </a>
-        <a href="/#contact" class="text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-2 epilogue">
+        <a href="/#contact" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue">
           Contact
         </a>
         
-        <!-- Language Switcher for Mobile -->
+        <!-- Mobile Language Switcher -->
         <div class="pt-2 border-t border-gray-200">
-          <LanguageSwitcher />
+          <div class="text-sm font-medium text-gray-500 mb-2 epilogue">Language</div>
+          <div class="flex space-x-2">
+            <button class="mobile-lang-option flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-lg text-sm font-medium epilogue transition-colors" data-lang="de">
+              🇩🇪 Deutsch
+            </button>
+            <button class="mobile-lang-option flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-lg text-sm font-medium epilogue transition-colors" data-lang="en">
+              🇬🇧 English  
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -77,56 +93,152 @@ import logoImage from '../assets/logoJXX-modified.png';
 </nav>
 
 <script>
-  // Mobile menu toggle functionality
-  document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
+document.addEventListener('DOMContentLoaded', function() {
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+  
+  // Desktop language switcher
+  const desktopLangBtn = document.getElementById('desktop-lang-btn');
+  const desktopLangMenu = document.getElementById('desktop-lang-menu');
+  const desktopLangText = document.getElementById('desktop-lang-text');
+  const desktopLangOptions = document.querySelectorAll('.desktop-lang-option');
+  
+  // Mobile language switcher
+  const mobileLangOptions = document.querySelectorAll('.mobile-lang-option');
+  
+  let currentLang = localStorage.getItem('jxx-language') || 'de';
+  
+  // Update language display
+  function updateLanguageDisplay() {
+    desktopLangText.textContent = currentLang.toUpperCase();
     
-    if (mobileMenuButton && mobileMenu) {
-      mobileMenuButton.addEventListener('click', function() {
-        mobileMenu.classList.toggle('hidden');
-      });
-    }
-    
-    // Smooth scrolling for navigation links (only for same-page anchors)
-    const navLinks = document.querySelectorAll('nav a[href^="#"]');
-    
-    navLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-        // Only prevent default for anchor links on the current page
-        if (window.location.pathname === '/' || window.location.pathname === '') {
-          e.preventDefault();
-          const targetId = this.getAttribute('href');
-          const targetSection = document.querySelector(targetId);
-          
-          if (targetSection) {
-            const offsetTop = targetSection.offsetTop - 80;
-            window.scrollTo({
-              top: offsetTop,
-              behavior: 'smooth'
-            });
-          }
-        }
-        
-        // Close mobile menu after clicking any link
-        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-          mobileMenu.classList.add('hidden');
-        }
-      });
+    // Update active states
+    desktopLangOptions.forEach(opt => {
+      opt.classList.toggle('bg-blue-50', opt.dataset.lang === currentLang);
     });
     
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(event) {
-      if (mobileMenu && mobileMenuButton) {
-        const isClickInsideMenu = mobileMenu.contains(event.target);
-        const isClickOnButton = mobileMenuButton.contains(event.target);
-        
-        if (!isClickInsideMenu && !isClickOnButton && !mobileMenu.classList.contains('hidden')) {
-          mobileMenu.classList.add('hidden');
+    mobileLangOptions.forEach(opt => {
+      opt.classList.toggle('bg-blue-100', opt.dataset.lang === currentLang);
+      opt.classList.toggle('text-blue-800', opt.dataset.lang === currentLang);
+    });
+  }
+  
+  // Change language
+  function changeLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('jxx-language', lang);
+    updateLanguageDisplay();
+    translatePage();
+    closeMobileMenu();
+    closeDesktopLangMenu();
+  }
+  
+  // Basic translation
+  function translatePage() {
+    const translations = {
+      de: { home: 'Startseite', artworks: 'Kunstwerke', about: 'Über mich', contact: 'Kontakt' },
+      en: { home: 'Home', artworks: 'Artworks', about: 'About', contact: 'Contact' }
+    };
+    
+    const t = translations[currentLang];
+    document.querySelector('a[href="/"]').textContent = t.home;
+    document.querySelector('a[href="/#artworks"]').textContent = t.artworks;
+    document.querySelector('a[href="/#about"]').textContent = t.about;
+    document.querySelector('a[href="/#contact"]').textContent = t.contact;
+    
+    // Update mobile nav too
+    const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+    mobileLinks[0].textContent = t.home;
+    mobileLinks[1].textContent = t.artworks;
+    mobileLinks[2].textContent = t.about;
+    mobileLinks[3].textContent = t.contact;
+    
+    // Update page content
+    document.querySelectorAll('[data-translate]').forEach(el => {
+      const key = el.getAttribute('data-translate');
+      const translations = {
+        de: {
+          'gallery-title': 'Kunstgalerie',
+          'about-title': 'Über mich', 
+          'contact-title': 'Kontakt aufnehmen',
+          'sold': 'Verkauft'
+        },
+        en: {
+          'gallery-title': 'Art Gallery',
+          'about-title': 'About Me',
+          'contact-title': 'Get in Touch', 
+          'sold': 'Sold'
         }
+      };
+      if (translations[currentLang][key]) {
+        el.textContent = translations[currentLang][key];
       }
     });
+  }
+  
+  // Mobile menu functions
+  function closeMobileMenu() {
+    mobileMenu.classList.add('hidden');
+  }
+  
+  function toggleMobileMenu() {
+    mobileMenu.classList.toggle('hidden');
+  }
+  
+  // Desktop language menu functions
+  function closeDesktopLangMenu() {
+    desktopLangMenu.classList.add('hidden');
+  }
+  
+  function toggleDesktopLangMenu() {
+    desktopLangMenu.classList.toggle('hidden');
+  }
+  
+  // Event listeners
+  mobileMenuButton.addEventListener('click', toggleMobileMenu);
+  
+  // Close mobile menu when clicking nav links
+  mobileNavLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMobileMenu();
+    });
   });
+  
+  // Desktop language switcher events
+  desktopLangBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDesktopLangMenu();
+  });
+  
+  desktopLangOptions.forEach(option => {
+    option.addEventListener('click', (e) => {
+      e.stopPropagation();
+      changeLanguage(option.dataset.lang);
+    });
+  });
+  
+  // Mobile language switcher events
+  mobileLangOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      changeLanguage(option.dataset.lang);
+    });
+  });
+  
+  // Close menus when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+      closeMobileMenu();
+    }
+    if (!desktopLangMenu.contains(e.target) && !desktopLangBtn.contains(e.target)) {
+      closeDesktopLangMenu();
+    }
+  });
+  
+  // Initialize
+  updateLanguageDisplay();
+  translatePage();
+});
 </script>
 
 <style>

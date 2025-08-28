@@ -1,5 +1,5 @@
 ---
-// src/pages/artwork/[id].astro
+// src/pages/artwork/[id].astro - With mobile borders added
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
 import { getAllArtworks } from '../../data/series.js';
@@ -35,7 +35,8 @@ const { artwork } = Astro.props;
       <div class="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
         <!-- Artwork Image -->
         <div class="space-y-6">
-          <div class="bg-gray-50 rounded-2xl overflow-hidden">
+          <!-- Desktop: No border, Mobile: Border -->
+          <div class="bg-gray-50 rounded-2xl overflow-hidden md:border-0 border-2 border-gray-200">
             <img 
               src={artwork.image} 
               alt={artwork.title}
@@ -53,8 +54,8 @@ const { artwork } = Astro.props;
         
         <!-- Artwork Details and Contact -->
         <div class="space-y-8">
-          <!-- Artwork Info -->
-          <div class="space-y-6">
+          <!-- Artwork Info - Desktop: No border, Mobile: Border -->
+          <div class="space-y-6 md:p-0 md:bg-transparent md:border-0 p-6 bg-white border-2 border-gray-200 rounded-2xl">
             <div>
               <h1 class="text-4xl font-bold text-gray-900 mb-2">{artwork.title}</h1>
               {artwork.sold ? (
@@ -91,7 +92,7 @@ const { artwork } = Astro.props;
           
           <!-- Contact Form -->
           <div class="border-t pt-8">
-            <div class="bg-gray-50 rounded-2xl p-8">
+            <div class="bg-gray-50 rounded-2xl p-8 border-2 border-gray-200">
               <h2 class="text-2xl font-bold text-gray-900 mb-6 epilogue" data-translate={artwork.sold ? "interested-in-similar" : "interested-in-artwork"}>
                 {artwork.sold ? 'Interested in Similar Work?' : 'Interested in this Artwork?'}
               </h2>
@@ -181,14 +182,11 @@ const { artwork } = Astro.props;
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <script>
-  // Import translations
-  import { getTranslations, getCurrentLanguage } from '../../data/languages.js';
-  
   // EmailJS Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
   const EMAILJS_CONFIG = {
     SERVICE_ID: 'service_keg7hm6',        // Replace with your service ID
     TEMPLATE_ID: 'template_5exinwt',      // Replace with your template ID
-    PUBLIC_KEY: 'khOTmY1cpKsPrjL26'         // Replace with your public key
+    PUBLIC_KEY: 'khOTmY1cpKsPrjL26'         // Replace with your public key       
   };
   
   document.addEventListener('DOMContentLoaded', function() {
@@ -200,30 +198,57 @@ const { artwork } = Astro.props;
     const messageText = document.getElementById('message-text');
     const messageTextarea = document.getElementById('message');
     
-    // Set up translations
-    function updateTranslations() {
-      const currentLang = getCurrentLanguage();
-      const translations = getTranslations(currentLang);
-      
-      // Update placeholders
+    // Get current language and set up translations
+    const currentLang = localStorage.getItem('jxx-language') || 'de';
+    const translations = {
+      de: {
+        namePlaceholder: 'Ihr vollständiger Name',
+        emailPlaceholder: 'ihre@email.de',
+        messagePlaceholder: 'Erzählen Sie mir von Ihrem Projekt...',
+        purchaseInquiry: 'Ich interessiere mich für den Kauf dieses Kunstwerks. Bitte geben Sie mir weitere Informationen über die Verfügbarkeit und Kaufdetails.',
+        similarInquiry: 'Ich interessiere mich für ähnliche Kunstwerke oder möchte über neue Werke informiert werden.',
+        sending: 'Wird gesendet...',
+        messageSent: '✓ Nachricht gesendet!',
+        successMessage: 'Vielen Dank! Ihre Nachricht wurde erfolgreich gesendet. Ich melde mich bald bei Ihnen.',
+        errorMessage: 'Entschuldigung, beim Senden Ihrer Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.',
+        requiredFieldsError: 'Bitte füllen Sie alle Pflichtfelder aus.',
+        error: 'Fehler - Erneut versuchen'
+      },
+      en: {
+        namePlaceholder: 'Your full name',
+        emailPlaceholder: 'your@email.com', 
+        messagePlaceholder: 'Tell me about your project...',
+        purchaseInquiry: 'I am interested in purchasing this artwork. Please provide more information about availability and purchase details.',
+        similarInquiry: 'I am interested in similar artworks or would like to be notified of new pieces.',
+        sending: 'Sending...',
+        messageSent: '✓ Message Sent!',
+        successMessage: 'Thank you! Your message has been sent successfully. I\'ll get back to you soon.',
+        errorMessage: 'Sorry, there was an error sending your message. Please try again.',
+        requiredFieldsError: 'Please fill in all required fields.',
+        error: 'Error - Try Again'
+      }
+    };
+    
+    const t = translations[currentLang];
+    
+    // Set up form with translations
+    function setupForm() {
       const nameInput = document.getElementById('name');
       const emailInput = document.getElementById('email');
       
-      if (nameInput) nameInput.placeholder = translations.namePlaceholder;
-      if (emailInput) emailInput.placeholder = translations.emailPlaceholder;
+      if (nameInput) nameInput.placeholder = t.namePlaceholder;
+      if (emailInput) emailInput.placeholder = t.emailPlaceholder;
       
       // Set default message based on artwork status
       const isArtworkSold = messageTextarea.dataset.artworkSold === 'true';
       if (messageTextarea && !messageTextarea.value.trim()) {
-        messageTextarea.placeholder = translations.messagePlaceholder;
-        messageTextarea.value = isArtworkSold 
-          ? translations.similarInquiry
-          : translations.purchaseInquiry;
+        messageTextarea.placeholder = t.messagePlaceholder;
+        messageTextarea.value = isArtworkSold ? t.similarInquiry : t.purchaseInquiry;
       }
     }
     
-    // Initialize translations
-    updateTranslations();
+    // Initialize form
+    setupForm();
     
     // Show message function
     function showMessage(message, type) {
@@ -249,8 +274,6 @@ const { artwork } = Astro.props;
       
       const submitBtn = this.querySelector('button[type="submit"]');
       const originalText = submitBtn.textContent;
-      const currentLang = getCurrentLanguage();
-      const translations = getTranslations(currentLang);
       
       // Validate required fields
       const name = this.querySelector('#name').value.trim();
@@ -258,12 +281,12 @@ const { artwork } = Astro.props;
       const message = this.querySelector('#message').value.trim();
       
       if (!name || !email || !message) {
-        showMessage(translations.requiredFieldsError, 'error');
+        showMessage(t.requiredFieldsError, 'error');
         return;
       }
       
       // Show loading state
-      submitBtn.textContent = translations.sending;
+      submitBtn.textContent = t.sending;
       submitBtn.disabled = true;
       submitBtn.classList.add('opacity-75');
       
@@ -287,28 +310,17 @@ const { artwork } = Astro.props;
         console.log('EmailJS Response:', response);
         
         // Show success state
-        submitBtn.textContent = translations.messageSent;
+        submitBtn.textContent = t.messageSent;
         submitBtn.classList.remove('from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
         submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
         
         // Show success message
-        showMessage(translations.successMessage, 'success');
+        showMessage(t.successMessage, 'success');
         
         // Reset form after delay
         setTimeout(() => {
           this.reset();
-          
-          // Re-set default message
-          const isArtworkSold = messageTextarea.dataset.artworkSold === 'true';
-          messageTextarea.value = isArtworkSold 
-            ? translations.similarInquiry
-            : translations.purchaseInquiry;
-          
-          // Reset subject
-          const subjectField = this.querySelector('#subject');
-          const artworkTitle = subjectField.value.split(' - ')[1] || 'Artwork';
-          const artworkId = subjectField.value.split('#')[1]?.split(' - ')[0] || '000';
-          subjectField.value = `Artwork Inquiry: #${artworkId} - ${artworkTitle}`;
+          setupForm(); // Re-setup form with translations
           
           // Reset button
           submitBtn.textContent = originalText;
@@ -321,12 +333,12 @@ const { artwork } = Astro.props;
         console.error('EmailJS Error:', error);
         
         // Show error state
-        submitBtn.textContent = translations.error;
+        submitBtn.textContent = t.error;
         submitBtn.classList.remove('from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
         submitBtn.classList.add('bg-red-600', 'hover:bg-red-700');
         
         // Show error message
-        let errorMessage = translations.errorMessage;
+        let errorMessage = t.errorMessage;
         if (error.text) {
           errorMessage += ` (${error.text})`;
         }
@@ -338,13 +350,6 @@ const { artwork } = Astro.props;
           submitBtn.classList.remove('opacity-75', 'bg-red-600', 'hover:bg-red-700');
           submitBtn.classList.add('from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
         }, 3000);
-      }
-    });
-    
-    // Listen for language changes
-    window.addEventListener('storage', function(e) {
-      if (e.key === 'jxx-language') {
-        updateTranslations();
       }
     });
   });

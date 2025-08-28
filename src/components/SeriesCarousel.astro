@@ -21,25 +21,23 @@ const { series, imageLeft = false } = Astro.props;
 <div class={`series-container ${imageLeft ? 'image-left' : 'image-right'} w-full max-w-6xl mx-auto`}>
   <!-- Desktop Layout -->
   <div class="hidden md:grid md:grid-cols-2 gap-16 items-center px-4">
-    <!-- Image Carousel -->
+    <!-- Desktop Carousel -->
     <div class={`carousel-container ${imageLeft ? '' : 'md:order-2'}`}>
       <div class="relative bg-white rounded-xl shadow-sm overflow-hidden mx-auto max-w-md">
-        <!-- Carousel Images -->
-        <div class="carousel-wrapper relative" data-series={series.id}>
-          <div class="carousel-track flex transition-transform duration-500 ease-in-out">
+        <div class="desktop-carousel relative" data-series={series.id}>
+          <div class="desktop-track flex transition-transform duration-500 ease-in-out">
             {series.artworks.map((artwork, index) => (
-              <div class="carousel-slide flex-shrink-0 w-full relative group cursor-pointer" data-artwork-id={artwork.id}>
+              <div class="desktop-slide flex-shrink-0 w-full relative group cursor-pointer" data-artwork-id={artwork.id}>
                 <a href={`/artwork/${artwork.id}`} class="block w-full h-full">
                   <img 
                     src={artwork.image} 
                     alt={artwork.title}
                     class="w-full h-80 object-cover"
                   />
-                  <!-- Subtle overlay -->
                   <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent group-hover:from-black/10 transition-all duration-300"></div>
                 </a>
                 {artwork.sold && (
-                  <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm" data-translate="sold">
+                  <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
                     Sold
                   </div>
                 )}
@@ -47,15 +45,14 @@ const { series, imageLeft = false } = Astro.props;
             ))}
           </div>
           
-          <!-- Navigation Arrows -->
           {series.artworks.length > 1 && (
             <>
-              <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-2 shadow-md transition-all duration-300 z-10">
+              <button class="desktop-prev absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-2 shadow-md z-10">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
               </button>
-              <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-2 shadow-md transition-all duration-300 z-10">
+              <button class="desktop-next absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-2 shadow-md z-10">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
@@ -64,12 +61,11 @@ const { series, imageLeft = false } = Astro.props;
           )}
         </div>
         
-        <!-- Progress Dots -->
         {series.artworks.length > 1 && (
           <div class="flex justify-center space-x-1.5 py-3 bg-white">
             {series.artworks.map((_, index) => (
               <button 
-                class={`dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'}`}
+                class={`desktop-dot w-1.5 h-1.5 rounded-full transition-all duration-300 ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'}`}
                 data-index={index}
               ></button>
             ))}
@@ -78,17 +74,16 @@ const { series, imageLeft = false } = Astro.props;
       </div>
     </div>
     
-    <!-- Text Content -->
+    <!-- Desktop Text Content -->
     <div class={`content-container ${imageLeft ? 'md:order-2' : 'md:order-1'} flex flex-col justify-center`}>
       <div class={`space-y-4 ${!imageLeft ? 'text-right' : 'text-left'} max-w-md mx-auto`}>
         <div>
           <h3 class="text-2xl font-bold text-gray-900 mb-4 epilogue">{series.title}</h3>
         </div>
         
-        <!-- Dynamic Artwork Info -->
-        <div class="artwork-info">
+        <div class="desktop-artwork-info">
           {series.artworks.map((artwork, index) => (
-            <div class={`artwork-details ${index === 0 ? 'block' : 'hidden'}`} data-artwork-index={index}>
+            <div class={`desktop-info ${index === 0 ? 'block' : 'hidden'}`} data-info-index={index}>
               <div class="space-y-1">
                 <div class="text-xl font-bold text-gray-900 epilogue">#{artwork.id}</div>
                 <div class="text-base font-medium text-gray-700 epilogue">{artwork.title}</div>
@@ -96,7 +91,7 @@ const { series, imageLeft = false } = Astro.props;
                   <div class="text-base font-medium text-gray-900 epilogue">€{artwork.price}</div>
                 )}
                 {artwork.sold && (
-                  <div class="text-base font-medium text-gray-900 epilogue" data-translate="sold">Sold</div>
+                  <div class="text-base font-medium text-gray-900 epilogue">Sold</div>
                 )}
               </div>
             </div>
@@ -109,28 +104,27 @@ const { series, imageLeft = false } = Astro.props;
   <!-- Mobile Layout -->
   <div class="md:hidden px-4">
     <div class="space-y-4 max-w-md mx-auto">
-      <!-- Series Title -->
       <div class="text-center">
         <h3 class="text-xl font-bold text-gray-900 mb-4 epilogue">{series.title}</h3>
       </div>
       
-      <!-- Mobile Carousel -->
-      <div class="mobile-carousel-container relative">
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-          <div class="mobile-carousel-wrapper relative" data-series={`${series.id}-mobile`} data-slides={series.artworks.length}>
-            <div class="mobile-carousel-track flex will-change-transform" style="transform: translateX(0%); transition: transform 300ms ease-out;">
+      <!-- Mobile Carousel with BORDERS -->
+      <div class="mobile-carousel-container">
+        <div class="relative bg-white rounded-xl shadow-sm border-2 border-gray-200 overflow-hidden">
+          <div class="mobile-carousel relative" data-series={`${series.id}-mobile`}>
+            <div class="mobile-track flex" style="transform: translateX(0%); transition: none;">
               {series.artworks.map((artwork, index) => (
-                <div class="mobile-slide flex-shrink-0 w-full relative" data-artwork-id={artwork.id} data-slide-index={index}>
-                  <div class="image-container relative cursor-pointer" data-href={`/artwork/${artwork.id}`}>
+                <div class="mobile-slide flex-shrink-0 w-full relative" data-artwork-id={artwork.id} data-index={index}>
+                  <div class="mobile-image-wrapper border-b-2 border-gray-200">
                     <img 
                       src={artwork.image} 
                       alt={artwork.title}
-                      class="w-full h-72 object-cover select-none"
+                      class="w-full h-72 object-cover cursor-pointer"
                       draggable="false"
                     />
                   </div>
                   {artwork.sold && (
-                    <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm" data-translate="sold">
+                    <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
                       Sold
                     </div>
                   )}
@@ -138,15 +132,14 @@ const { series, imageLeft = false } = Astro.props;
               ))}
             </div>
             
-            <!-- Mobile Navigation Arrows -->
             {series.artworks.length > 1 && (
               <>
-                <button class="mobile-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md z-10">
+                <button class="mobile-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 text-gray-600 rounded-full p-2 shadow-md z-20">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                   </svg>
                 </button>
-                <button class="mobile-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-1.5 shadow-md z-10">
+                <button class="mobile-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 text-gray-600 rounded-full p-2 shadow-md z-20">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
@@ -155,12 +148,11 @@ const { series, imageLeft = false } = Astro.props;
             )}
           </div>
           
-          <!-- Mobile Progress Dots -->
           {series.artworks.length > 1 && (
-            <div class="flex justify-center space-x-1.5 py-3 bg-white">
+            <div class="flex justify-center space-x-1.5 py-3 bg-white border-t border-gray-200">
               {series.artworks.map((_, index) => (
                 <div 
-                  class={`mobile-dot w-1.5 h-1.5 rounded-full transition-all duration-300 cursor-pointer ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'}`}
+                  class={`mobile-dot w-1.5 h-1.5 rounded-full cursor-pointer ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'}`}
                   data-index={index}
                 ></div>
               ))}
@@ -169,19 +161,19 @@ const { series, imageLeft = false } = Astro.props;
         </div>
       </div>
       
-      <!-- Mobile Artwork Info -->
+      <!-- Mobile Artwork Info with BORDERS -->
       <div class="text-center">
-        <div class="mobile-artwork-info">
+        <div class="mobile-artwork-info bg-white border-2 border-gray-200 rounded-xl p-4">
           {series.artworks.map((artwork, index) => (
             <div class={`mobile-info ${index === 0 ? 'block' : 'hidden'}`} data-info-index={index}>
-              <div class="space-y-1">
+              <div class="space-y-2">
                 <div class="text-lg font-bold text-gray-900">#{artwork.id}</div>
                 <div class="text-sm font-medium text-gray-700">{artwork.title}</div>
                 {!artwork.sold && (
                   <div class="text-sm font-medium text-gray-900">€{artwork.price}</div>
                 )}
                 {artwork.sold && (
-                  <div class="text-sm font-medium text-gray-900" data-translate="sold">Sold</div>
+                  <div class="text-sm font-medium text-gray-900">Sold</div>
                 )}
               </div>
             </div>
@@ -193,19 +185,20 @@ const { series, imageLeft = false } = Astro.props;
 </div>
 
 <script>
+let carousels = new Map();
+
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize carousels
   initDesktopCarousels();
   initMobileCarousels();
 });
 
 function initDesktopCarousels() {
-  document.querySelectorAll('.carousel-wrapper').forEach(carousel => {
-    const track = carousel.querySelector('.carousel-track');
-    const slides = carousel.querySelectorAll('.carousel-slide');
-    const dots = carousel.parentElement.querySelectorAll('.dot');
-    const prevBtn = carousel.querySelector('.carousel-prev');
-    const nextBtn = carousel.querySelector('.carousel-next');
+  document.querySelectorAll('.desktop-carousel').forEach(carousel => {
+    const track = carousel.querySelector('.desktop-track');
+    const slides = carousel.querySelectorAll('.desktop-slide');
+    const dots = carousel.parentElement.querySelectorAll('.desktop-dot');
+    const prevBtn = carousel.querySelector('.desktop-prev');
+    const nextBtn = carousel.querySelector('.desktop-next');
     
     let currentIndex = 0;
     
@@ -213,18 +206,27 @@ function initDesktopCarousels() {
       track.style.transform = `translateX(-${currentIndex * 100}%)`;
       
       dots.forEach((dot, i) => {
-        dot.classList.toggle('bg-gray-700', i === currentIndex);
-        dot.classList.toggle('bg-gray-300', i !== currentIndex);
+        if (i === currentIndex) {
+          dot.classList.add('bg-gray-700');
+          dot.classList.remove('bg-gray-300');
+        } else {
+          dot.classList.add('bg-gray-300');
+          dot.classList.remove('bg-gray-700');
+        }
       });
       
-      // Update artwork info
+      // Update info
       const container = carousel.closest('.series-container');
-      if (container) {
-        container.querySelectorAll('.artwork-details').forEach((detail, i) => {
-          detail.classList.toggle('block', i === currentIndex);
-          detail.classList.toggle('hidden', i !== currentIndex);
-        });
-      }
+      const infos = container.querySelectorAll('.desktop-info');
+      infos.forEach((info, i) => {
+        if (i === currentIndex) {
+          info.classList.add('block');
+          info.classList.remove('hidden');
+        } else {
+          info.classList.add('hidden');
+          info.classList.remove('block');
+        }
+      });
     }
     
     function goTo(index) {
@@ -234,161 +236,158 @@ function initDesktopCarousels() {
       updateDesktop();
     }
     
-    if (prevBtn) prevBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      goTo(currentIndex - 1);
-    });
-    
-    if (nextBtn) nextBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      goTo(currentIndex + 1);
-    });
+    if (prevBtn) prevBtn.onclick = () => goTo(currentIndex - 1);
+    if (nextBtn) nextBtn.onclick = () => goTo(currentIndex + 1);
     
     dots.forEach((dot, i) => {
-      dot.addEventListener('click', (e) => {
-        e.preventDefault();
-        goTo(i);
-      });
+      dot.onclick = () => goTo(i);
     });
   });
 }
 
 function initMobileCarousels() {
-  document.querySelectorAll('.mobile-carousel-wrapper').forEach(wrapper => {
-    const track = wrapper.querySelector('.mobile-carousel-track');
-    const slides = wrapper.querySelectorAll('.mobile-slide');
-    const dots = wrapper.parentElement.querySelectorAll('.mobile-dot');
-    const prevBtn = wrapper.querySelector('.mobile-prev');
-    const nextBtn = wrapper.querySelector('.mobile-next');
-    const imageContainers = wrapper.querySelectorAll('.image-container');
+  document.querySelectorAll('.mobile-carousel').forEach(carousel => {
+    const seriesId = carousel.dataset.series;
+    const track = carousel.querySelector('.mobile-track');
+    const slides = carousel.querySelectorAll('.mobile-slide');
+    const dots = carousel.parentElement.querySelectorAll('.mobile-dot');
+    const prevBtn = carousel.querySelector('.mobile-prev');
+    const nextBtn = carousel.querySelector('.mobile-next');
+    const images = carousel.querySelectorAll('.mobile-slide img');
     
     let currentIndex = 0;
-    let isAnimating = false;
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let isTouching = false;
-    let hasSwipe = false;
+    let startX = 0;
+    let startY = 0;
+    let isDragging = false;
+    let isHorizontalSwipe = false;
+    let startTime = 0;
     
     function updateMobile() {
+      track.style.transition = 'transform 300ms ease';
       track.style.transform = `translateX(-${currentIndex * 100}%)`;
       
+      // Update dots
       dots.forEach((dot, i) => {
-        dot.classList.toggle('bg-gray-700', i === currentIndex);
-        dot.classList.toggle('bg-gray-300', i !== currentIndex);
+        if (i === currentIndex) {
+          dot.classList.add('bg-gray-700');
+          dot.classList.remove('bg-gray-300');
+        } else {
+          dot.classList.add('bg-gray-300');
+          dot.classList.remove('bg-gray-700');
+        }
       });
       
       // Update info
-      const container = wrapper.closest('.md\\:hidden ');
-      if (container) {
-        container.querySelectorAll('.mobile-info').forEach((info, i) => {
-          info.classList.toggle('block', i === currentIndex);
-          info.classList.toggle('hidden', i !== currentIndex);
-        });
-      }
+      const container = carousel.closest('.md\\:hidden');
+      const infos = container.querySelectorAll('.mobile-info');
+      infos.forEach((info, i) => {
+        if (i === currentIndex) {
+          info.classList.add('block');
+          info.classList.remove('hidden');
+        } else {
+          info.classList.add('hidden');
+          info.classList.remove('block');
+        }
+      });
     }
     
     function goToSlide(index) {
-      if (isAnimating) return;
-      
       if (index >= slides.length) currentIndex = 0;
-      else if (index < 0) currentIndex = slides.length - 1; 
+      else if (index < 0) currentIndex = slides.length - 1;
       else currentIndex = index;
-      
-      isAnimating = true;
       updateMobile();
-      setTimeout(() => { isAnimating = false; }, 350);
     }
     
-    // Button navigation
+    // Button events
     if (prevBtn) {
-      prevBtn.addEventListener('click', (e) => {
+      prevBtn.onclick = (e) => {
         e.preventDefault();
         e.stopPropagation();
         goToSlide(currentIndex - 1);
-      });
+      };
     }
     
     if (nextBtn) {
-      nextBtn.addEventListener('click', (e) => {
+      nextBtn.onclick = (e) => {
         e.preventDefault();
         e.stopPropagation();
         goToSlide(currentIndex + 1);
-      });
+      };
     }
     
-    // Dot navigation
+    // Dot events
     dots.forEach((dot, i) => {
-      dot.addEventListener('click', (e) => {
-        e.preventDefault();
-        goToSlide(i);
-      });
+      dot.onclick = () => goToSlide(i);
     });
     
-    // Touch events for swiping
-    track.addEventListener('touchstart', (e) => {
-      if (isAnimating) return;
-      
+    // Touch events
+    track.ontouchstart = (e) => {
       const touch = e.touches[0];
-      touchStartX = touch.clientX;
-      touchStartY = touch.clientY;
-      isTouching = true;
-      hasSwipe = false;
-      
+      startX = touch.clientX;
+      startY = touch.clientY;
+      startTime = Date.now();
+      isDragging = false;
+      isHorizontalSwipe = false;
       track.style.transition = 'none';
-    }, { passive: true });
+    };
     
-    track.addEventListener('touchmove', (e) => {
-      if (!isTouching || isAnimating) return;
+    track.ontouchmove = (e) => {
+      if (!startX) return;
       
       const touch = e.touches[0];
-      const deltaX = touch.clientX - touchStartX;
-      const deltaY = touch.clientY - touchStartY;
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
       
-      // Only handle horizontal swipes
-      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
-        hasSwipe = true;
+      if (!isDragging && !isHorizontalSwipe) {
+        if (Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
+          isHorizontalSwipe = true;
+          isDragging = true;
+          e.preventDefault();
+        }
+      }
+      
+      if (isDragging && isHorizontalSwipe) {
         e.preventDefault();
-        
-        // Visual feedback during swipe
         const percent = (deltaX / track.offsetWidth) * 100;
         const translate = (-currentIndex * 100) + percent;
         track.style.transform = `translateX(${translate}%)`;
       }
-    }, { passive: false });
+    };
     
-    track.addEventListener('touchend', (e) => {
-      if (!isTouching || isAnimating) return;
+    track.ontouchend = (e) => {
+      if (!isDragging) return;
       
-      isTouching = false;
-      track.style.transition = 'transform 300ms ease-out';
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - startX;
+      const deltaTime = Date.now() - startTime;
+      const velocity = Math.abs(deltaX) / deltaTime;
       
-      if (hasSwipe) {
-        const touch = e.changedTouches[0];
-        const deltaX = touch.clientX - touchStartX;
-        const threshold = 50;
-        
-        if (Math.abs(deltaX) > threshold) {
-          if (deltaX > 0) {
-            goToSlide(currentIndex - 1);
-          } else {
-            goToSlide(currentIndex + 1);  
-          }
+      track.style.transition = 'transform 300ms ease';
+      
+      if (Math.abs(deltaX) > 50 || velocity > 0.3) {
+        if (deltaX > 0) {
+          goToSlide(currentIndex - 1);
         } else {
-          updateMobile(); // Snap back
+          goToSlide(currentIndex + 1);
         }
+      } else {
+        updateMobile();
       }
-    }, { passive: true });
+      
+      // Reset
+      startX = 0;
+      isDragging = false;
+      isHorizontalSwipe = false;
+    };
     
-    // Image click navigation
-    imageContainers.forEach(container => {
-      container.addEventListener('click', (e) => {
-        if (!hasSwipe) {
-          const href = container.dataset.href;
-          if (href) {
-            window.location.href = href;
-          }
+    // Image click events
+    images.forEach((img, index) => {
+      img.onclick = (e) => {
+        if (!isDragging) {
+          const artworkId = img.closest('.mobile-slide').dataset.artworkId;
+          window.location.href = `/artwork/${artworkId}`;
         }
-      });
+      };
     });
     
     // Initialize
@@ -398,18 +397,12 @@ function initMobileCarousels() {
 </script>
 
 <style>
-.mobile-carousel-track {
+.mobile-carousel-container {
   touch-action: pan-y;
 }
 
-.mobile-slide {
+.mobile-slide img {
   user-select: none;
   -webkit-user-select: none;
-}
-
-.image-container {
-  display: block;
-  width: 100%;
-  height: 100%;
 }
 </style>

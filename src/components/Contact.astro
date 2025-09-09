@@ -138,9 +138,9 @@
 <script>
   // EmailJS Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
   const EMAILJS_CONFIG = {
-    SERVICE_ID: 'service_keg7hm6',        // Replace with your service ID
-    TEMPLATE_ID: 'template_5exinwt',      // Replace with your template ID
-    PUBLIC_KEY: 'khOTmY1cpKsPrjL26'         // Replace with your public key
+    SERVICE_ID: 'YOUR_SERVICE_ID',        // Replace with your service ID
+    TEMPLATE_ID: 'YOUR_TEMPLATE_ID',      // Replace with your template ID
+    PUBLIC_KEY: 'YOUR_PUBLIC_KEY'         // Replace with your public key
   };
   
   document.addEventListener('DOMContentLoaded', function() {
@@ -150,6 +150,69 @@
     const form = document.getElementById('contact-form');
     const messageDiv = document.getElementById('form-message');
     const messageText = document.getElementById('message-text');
+    
+    // Get current language
+    const currentLang = localStorage.getItem('jxx-language') || 'de';
+    const translations = {
+      de: {
+        namePlaceholder: 'Ihr vollständiger Name',
+        emailPlaceholder: 'ihre@email.de',
+        subjectPlaceholder: 'Projektanfrage, Auftragsarbeit, etc.',
+        messagePlaceholder: 'Erzählen Sie mir von Ihrem Projekt...',
+        sending: 'Wird gesendet...',
+        messageSent: '✓ Nachricht gesendet!',
+        successMessage: 'Vielen Dank! Ihre Nachricht wurde erfolgreich gesendet.',
+        errorMessage: 'Entschuldigung, beim Senden ist ein Fehler aufgetreten.',
+        requiredFieldsError: 'Bitte füllen Sie alle Pflichtfelder aus.',
+        error: 'Fehler - Erneut versuchen',
+        name: 'Name',
+        email: 'E-Mail',
+        subject: 'Betreff',
+        message: 'Nachricht',
+        send: 'Nachricht senden'
+      },
+      en: {
+        namePlaceholder: 'Your full name',
+        emailPlaceholder: 'your@email.com',
+        subjectPlaceholder: 'Project inquiry, commission, etc.',
+        messagePlaceholder: 'Tell me about your project...',
+        sending: 'Sending...',
+        messageSent: '✓ Message Sent!',
+        successMessage: 'Thank you! Your message has been sent successfully.',
+        errorMessage: 'Sorry, there was an error sending your message.',
+        requiredFieldsError: 'Please fill in all required fields.',
+        error: 'Error - Try Again',
+        name: 'Name',
+        email: 'Email',
+        subject: 'Subject',
+        message: 'Message',
+        send: 'Send Message'
+      }
+    };
+    
+    const t = translations[currentLang];
+    
+    // Update form with current language
+    function updateFormLanguage() {
+      // Update placeholders
+      document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-translate-placeholder');
+        if (t[key + 'Placeholder']) {
+          el.placeholder = t[key + 'Placeholder'];
+        }
+      });
+      
+      // Update labels
+      document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        if (t[key]) {
+          el.textContent = t[key];
+        }
+      });
+    }
+    
+    // Initialize form language
+    updateFormLanguage();
     
     // Show message function
     function showMessage(message, type) {

@@ -239,7 +239,56 @@ const { artwork } = Astro.props;
         messageTextarea.placeholder = t.messagePlaceholder;
         messageTextarea.value = isArtworkSold ? t.similarInquiry : t.purchaseInquiry;
       }
+      
+      // Update all page translations
+      updatePageTranslations();
     }
+    
+    // Update page translations
+    function updatePageTranslations() {
+      // Update elements with data-translate attributes
+      document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        if (t[key]) {
+          el.textContent = t[key];
+        }
+      });
+      
+      // Update form labels
+      const labels = {
+        'name': t.name,
+        'email': t.email,
+        'subject': t.subject,
+        'message': t.message
+      };
+      
+      Object.entries(labels).forEach(([fieldName, labelText]) => {
+        const label = document.querySelector(`label[for="${fieldName}"]`);
+        if (label) {
+          const span = label.querySelector('span[data-translate]');
+          if (span) {
+            span.textContent = labelText;
+          }
+        }
+      });
+      
+      // Update button text
+      const submitBtn = document.querySelector('button[type="submit"]');
+      if (submitBtn && submitBtn.textContent.includes('Send') || submitBtn.textContent.includes('Anfrage')) {
+        submitBtn.textContent = t.sendInquiry;
+      }
+    }
+    
+    // Listen for language changes
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'jxx-language') {
+        // Language changed, update current language and re-setup
+        const newLang = localStorage.getItem('jxx-language') || 'de';
+        if (newLang !== currentLang) {
+          window.location.reload(); // Reload to get new translations
+        }
+      }
+    });
     
     setupForm();
     

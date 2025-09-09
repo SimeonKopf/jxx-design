@@ -158,21 +158,23 @@ const { series, imageLeft = false } = Astro.props;
         )}
       </div>
       
-      <!-- Mobile Artwork Info -->
+      <!-- Mobile Artwork Info - Clickable Text, No Borders -->
       <div class="text-center">
         <div class="mobile-info-container bg-gray-50 rounded-xl p-4">
           {series.artworks.map((artwork, index) => (
             <div class={`mobile-artwork-info ${index === 0 ? 'block' : 'hidden'}`} data-mobile-info-index={index}>
-              <div class="space-y-2">
-                <div class="text-lg font-bold text-gray-900">#{artwork.id}</div>
-                <div class="text-sm font-medium text-gray-700">{artwork.title}</div>
-                {!artwork.sold && (
-                  <div class="text-sm font-medium text-gray-900">€{artwork.price}</div>
-                )}
-                {artwork.sold && (
-                  <div class="text-sm font-medium text-gray-900">Sold</div>
-                )}
-              </div>
+              <a href={`/artwork/${artwork.id}`} class="block hover:bg-gray-100 rounded-lg p-2 transition-colors duration-200 cursor-pointer">
+                <div class="space-y-2">
+                  <div class="text-lg font-bold text-gray-900">#{artwork.id}</div>
+                  <div class="text-sm font-medium text-gray-700">{artwork.title}</div>
+                  {!artwork.sold && (
+                    <div class="text-sm font-medium text-gray-900">€{artwork.price}</div>
+                  )}
+                  {artwork.sold && (
+                    <div class="text-sm font-medium text-gray-900">Sold</div>
+                  )}
+                </div>
+              </a>
             </div>
           ))}
         </div>

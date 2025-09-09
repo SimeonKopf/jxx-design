@@ -99,71 +99,70 @@ const { series, imageLeft = false } = Astro.props;
     </div>
   </div>
   
-  <!-- Mobile Layout with WORKING SWIPE -->
-  <div class="md:hidden px-4">
-    <div class="space-y-6 max-w-md mx-auto">
+  <!-- Mobile Layout with MORE SPACE and WORKING SWIPE -->
+  <div class="md:hidden px-8">
+    <div class="space-y-8 max-w-sm mx-auto">
       <div class="text-center">
-        <h3 class="text-xl font-bold text-gray-900 mb-4 epilogue">{series.title}</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-6 epilogue">{series.title}</h3>
       </div>
       
-      <!-- Mobile Carousel Container -->
-      <div class="mobile-swipe-container" data-series={series.id}>
-        <div class="relative bg-white rounded-xl shadow-sm overflow-hidden">
-          <!-- Swipeable Track -->
-          <div class="mobile-swipe-track" data-total={series.artworks.length} data-current="0">
-            {series.artworks.map((artwork, index) => (
-              <div class="mobile-swipe-slide" data-index={index} data-artwork-id={artwork.id}>
-                <img 
-                  src={artwork.image} 
-                  alt={artwork.title}
-                  class="w-full h-72 object-cover"
-                  draggable="false"
-                />
-                {artwork.sold && (
-                  <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
-                    Sold
-                  </div>
-                )}
-              </div>
-            ))}
+      <!-- Mobile Carousel with Extra Spacing -->
+      <div class="px-4">
+        <div class="relative bg-white rounded-xl shadow-sm overflow-hidden" id={`mobile-carousel-${series.id}`}>
+          <div class="swiper-container">
+            <div class="swiper-track flex" style="transform: translateX(0%); transition: none;">
+              {series.artworks.map((artwork, index) => (
+                <div class="swiper-slide w-full flex-shrink-0" data-index={index}>
+                  <img 
+                    src={artwork.image} 
+                    alt={artwork.title}
+                    class="w-full h-72 object-cover select-none"
+                    draggable="false"
+                  />
+                  {artwork.sold && (
+                    <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
+                      Sold
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            {series.artworks.length > 1 && (
+              <>
+                <button class="swiper-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 text-gray-600 rounded-full p-2 shadow-md z-20">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                </button>
+                <button class="swiper-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 text-gray-600 rounded-full p-2 shadow-md z-20">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </>
+            )}
           </div>
           
-          <!-- Navigation Arrows -->
           {series.artworks.length > 1 && (
-            <>
-              <button class="mobile-arrow mobile-prev-arrow absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 text-gray-600 rounded-full p-2 shadow-md z-20">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-              </button>
-              <button class="mobile-arrow mobile-next-arrow absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 text-gray-600 rounded-full p-2 shadow-md z-20">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-              </button>
-            </>
+            <div class="flex justify-center space-x-1.5 py-3 bg-white">
+              {series.artworks.map((_, index) => (
+                <button 
+                  class={`swiper-dot w-1.5 h-1.5 rounded-full transition-colors duration-200 ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'}`}
+                  data-index={index}
+                ></button>
+              ))}
+            </div>
           )}
         </div>
-        
-        <!-- Progress Dots -->
-        {series.artworks.length > 1 && (
-          <div class="flex justify-center space-x-1.5 py-3 bg-white rounded-b-xl">
-            {series.artworks.map((_, index) => (
-              <button 
-                class={`mobile-swipe-dot w-1.5 h-1.5 rounded-full transition-colors duration-200 ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'}`}
-                data-dot-index={index}
-              ></button>
-            ))}
-          </div>
-        )}
       </div>
       
-      <!-- Mobile Artwork Info - Clickable Text, No Borders -->
-      <div class="text-center">
-        <div class="mobile-info-container bg-gray-50 rounded-xl p-4">
+      <!-- Mobile Artwork Info - CLICKABLE TEXT -->
+      <div class="text-center px-4">
+        <div class="bg-gray-50 rounded-xl p-6">
           {series.artworks.map((artwork, index) => (
-            <div class={`mobile-artwork-info ${index === 0 ? 'block' : 'hidden'}`} data-mobile-info-index={index}>
-              <a href={`/artwork/${artwork.id}`} class="block hover:bg-gray-100 rounded-lg p-2 transition-colors duration-200 cursor-pointer">
+            <div class={`mobile-info ${index === 0 ? 'block' : 'hidden'}`} data-info-index={index}>
+              <a href={`/artwork/${artwork.id}`} class="block p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200">
                 <div class="space-y-2">
                   <div class="text-lg font-bold text-gray-900">#{artwork.id}</div>
                   <div class="text-sm font-medium text-gray-700">{artwork.title}</div>
@@ -184,18 +183,15 @@ const { series, imageLeft = false } = Astro.props;
 </div>
 
 <script>
-// Global state for mobile carousels
-window.mobileCarousels = new Map();
-
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize desktop carousels
-  document.querySelectorAll('.desktop-carousel').forEach(initDesktopCarousel);
+  // Desktop carousels
+  document.querySelectorAll('.desktop-carousel').forEach(initDesktop);
   
-  // Initialize mobile carousels with bulletproof swiping
-  document.querySelectorAll('.mobile-swipe-container').forEach(initMobileSwipeCarousel);
+  // Mobile carousels - NEW IMPLEMENTATION
+  document.querySelectorAll('[id^="mobile-carousel-"]').forEach(initMobile);
 });
 
-function initDesktopCarousel(carousel) {
+function initDesktop(carousel) {
   const track = carousel.querySelector('.desktop-track');
   const slides = carousel.querySelectorAll('.desktop-slide');
   const dots = carousel.parentElement.querySelectorAll('.desktop-dot');
@@ -204,7 +200,7 @@ function initDesktopCarousel(carousel) {
   
   let currentIndex = 0;
   
-  function updateDesktop() {
+  function update() {
     track.style.transform = `translateX(-${currentIndex * 100}%)`;
     
     dots.forEach((dot, i) => {
@@ -222,7 +218,7 @@ function initDesktopCarousel(carousel) {
   
   function goTo(index) {
     currentIndex = index >= slides.length ? 0 : index < 0 ? slides.length - 1 : index;
-    updateDesktop();
+    update();
   }
   
   prevBtn?.addEventListener('click', () => goTo(currentIndex - 1));
@@ -230,241 +226,120 @@ function initDesktopCarousel(carousel) {
   dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
 }
 
-function initMobileSwipeCarousel(container) {
-  const seriesId = container.dataset.series;
-  const track = container.querySelector('.mobile-swipe-track');
-  const slides = container.querySelectorAll('.mobile-swipe-slide');
-  const dots = container.querySelectorAll('.mobile-swipe-dot');
-  const prevBtn = container.querySelector('.mobile-prev-arrow');
-  const nextBtn = container.querySelector('.mobile-next-arrow');
+function initMobile(container) {
+  const swiperContainer = container.querySelector('.swiper-container');
+  const track = container.querySelector('.swiper-track');
+  const slides = container.querySelectorAll('.swiper-slide');
+  const dots = container.querySelectorAll('.swiper-dot');
+  const prevBtn = container.querySelector('.swiper-prev');
+  const nextBtn = container.querySelector('.swiper-next');
   
-  if (slides.length <= 1) return; // Skip if only one slide
+  if (slides.length <= 1) return;
   
-  // Carousel state
-  const state = {
-    currentIndex: 0,
-    totalSlides: slides.length,
-    isAnimating: false,
-    touchStart: { x: 0, y: 0, time: 0 },
-    touchCurrent: { x: 0, y: 0 },
-    isDragging: false,
-    threshold: 50,
-    velocityThreshold: 0.3
-  };
+  let current = 0;
+  let startX = 0;
+  let moving = false;
+  let startTime = 0;
   
-  // Store state globally
-  window.mobileCarousels.set(seriesId, state);
-  
-  // Update carousel display
-  function updateCarousel(animate = true) {
-    if (animate) {
-      state.isAnimating = true;
-      track.style.transition = 'transform 300ms ease-out';
-      track.style.transform = `translateX(-${state.currentIndex * 100}%)`;
-      
-      setTimeout(() => {
-        state.isAnimating = false;
-      }, 300);
-    } else {
-      track.style.transition = 'none';
-      track.style.transform = `translateX(-${state.currentIndex * 100}%)`;
-    }
+  function updateMobile() {
+    track.style.transition = 'transform 300ms ease';
+    track.style.transform = `translateX(-${current * 100}%)`;
     
     // Update dots
     dots.forEach((dot, i) => {
-      dot.classList.toggle('bg-gray-700', i === state.currentIndex);
-      dot.classList.toggle('bg-gray-300', i !== state.currentIndex);
+      dot.classList.toggle('bg-gray-700', i === current);
+      dot.classList.toggle('bg-gray-300', i !== current);
     });
     
     // Update info
-    const mobileSection = container.closest('.md\\:hidden');
-    const infos = mobileSection.querySelectorAll('.mobile-artwork-info');
+    const section = container.closest('.md\\:hidden');
+    const infos = section.querySelectorAll('.mobile-info');
     infos.forEach((info, i) => {
-      info.classList.toggle('block', i === state.currentIndex);
-      info.classList.toggle('hidden', i !== state.currentIndex);
+      info.classList.toggle('block', i === current);
+      info.classList.toggle('hidden', i !== current);
     });
-    
-    track.dataset.current = state.currentIndex;
   }
   
-  // Navigate to specific slide
-  function goToSlide(index, animate = true) {
-    if (state.isAnimating) return;
-    
-    if (index >= state.totalSlides) {
-      state.currentIndex = 0;
-    } else if (index < 0) {
-      state.currentIndex = state.totalSlides - 1;
-    } else {
-      state.currentIndex = index;
-    }
-    
-    updateCarousel(animate);
+  function goToSlide(index) {
+    current = index >= slides.length ? 0 : index < 0 ? slides.length - 1 : index;
+    updateMobile();
   }
   
-  // Touch event handlers
-  function handleTouchStart(e) {
-    if (state.isAnimating) return;
-    
-    const touch = e.touches[0];
-    state.touchStart.x = touch.clientX;
-    state.touchStart.y = touch.clientY;
-    state.touchStart.time = Date.now();
-    state.touchCurrent.x = touch.clientX;
-    state.touchCurrent.y = touch.clientY;
-    state.isDragging = false;
-    
+  // Touch events
+  swiperContainer.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    startTime = Date.now();
+    moving = false;
     track.style.transition = 'none';
-  }
-  
-  function handleTouchMove(e) {
-    if (state.isAnimating) return;
-    
-    const touch = e.touches[0];
-    state.touchCurrent.x = touch.clientX;
-    state.touchCurrent.y = touch.clientY;
-    
-    const deltaX = state.touchCurrent.x - state.touchStart.x;
-    const deltaY = state.touchCurrent.y - state.touchStart.y;
-    const absDeltaX = Math.abs(deltaX);
-    const absDeltaY = Math.abs(deltaY);
-    
-    // Determine if this is a horizontal swipe
-    if (absDeltaX > 15 && absDeltaX > absDeltaY) {
-      if (!state.isDragging) {
-        state.isDragging = true;
-      }
-      
-      e.preventDefault(); // Prevent page scroll
-      
-      // Calculate drag position with resistance at edges
-      let dragPercent = (deltaX / track.offsetWidth) * 100;
-      let newTranslate = (-state.currentIndex * 100) + dragPercent;
-      
-      // Add resistance at boundaries
-      if (state.currentIndex === 0 && deltaX > 0) {
-        dragPercent *= 0.3; // Reduce movement when at first slide swiping right
-        newTranslate = dragPercent;
-      } else if (state.currentIndex === state.totalSlides - 1 && deltaX < 0) {
-        dragPercent *= 0.3; // Reduce movement when at last slide swiping left
-        newTranslate = (-state.currentIndex * 100) + dragPercent;
-      }
-      
-      track.style.transform = `translateX(${newTranslate}%)`;
-    }
-  }
-  
-  function handleTouchEnd(e) {
-    if (state.isAnimating) return;
-    
-    if (!state.isDragging) {
-      // Handle tap to navigate
-      const clickedSlide = e.target.closest('.mobile-swipe-slide');
-      if (clickedSlide) {
-        const artworkId = clickedSlide.dataset.artworkId;
-        if (artworkId) {
-          window.location.href = `/artwork/${artworkId}`;
-        }
-      }
-      return;
-    }
-    
-    const deltaX = state.touchCurrent.x - state.touchStart.x;
-    const deltaTime = Date.now() - state.touchStart.time;
-    const velocity = Math.abs(deltaX) / deltaTime;
-    const absDeltaX = Math.abs(deltaX);
-    
-    // Determine if swipe should trigger slide change
-    let shouldChange = false;
-    let direction = 0;
-    
-    if (absDeltaX > state.threshold || velocity > state.velocityThreshold) {
-      shouldChange = true;
-      direction = deltaX > 0 ? -1 : 1; // Right swipe = previous (-1), Left swipe = next (1)
-    }
-    
-    if (shouldChange) {
-      goToSlide(state.currentIndex + direction);
-    } else {
-      // Snap back to current slide
-      updateCarousel();
-    }
-    
-    // Reset state
-    state.isDragging = false;
-  }
-  
-  // Button event handlers
-  function handlePrevClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    goToSlide(state.currentIndex - 1);
-  }
-  
-  function handleNextClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    goToSlide(state.currentIndex + 1);
-  }
-  
-  function handleDotClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const index = parseInt(e.target.dataset.dotIndex);
-    if (!isNaN(index)) {
-      goToSlide(index);
-    }
-  }
-  
-  // Event listeners
-  track.addEventListener('touchstart', handleTouchStart, { passive: true });
-  track.addEventListener('touchmove', handleTouchMove, { passive: false });
-  track.addEventListener('touchend', handleTouchEnd, { passive: true });
-  track.addEventListener('touchcancel', () => { state.isDragging = false; }, { passive: true });
-  
-  prevBtn?.addEventListener('click', handlePrevClick);
-  nextBtn?.addEventListener('click', handleNextClick);
-  
-  dots.forEach(dot => {
-    dot.addEventListener('click', handleDotClick);
   });
   
-  // Prevent context menu on long press
-  track.addEventListener('contextmenu', (e) => e.preventDefault());
+  swiperContainer.addEventListener('touchmove', (e) => {
+    const currentX = e.touches[0].clientX;
+    const diff = currentX - startX;
+    
+    if (Math.abs(diff) > 10) {
+      moving = true;
+      e.preventDefault();
+      
+      const percent = (diff / track.offsetWidth) * 100;
+      const translate = (-current * 100) + percent;
+      track.style.transform = `translateX(${translate}%)`;
+    }
+  });
+  
+  swiperContainer.addEventListener('touchend', (e) => {
+    if (!moving) return;
+    
+    const endX = e.changedTouches[0].clientX;
+    const diff = endX - startX;
+    const time = Date.now() - startTime;
+    const velocity = Math.abs(diff) / time;
+    
+    if (Math.abs(diff) > 50 || velocity > 0.3) {
+      if (diff > 0) {
+        goToSlide(current - 1);
+      } else {
+        goToSlide(current + 1);
+      }
+    } else {
+      updateMobile();
+    }
+    
+    moving = false;
+  });
+  
+  // Buttons
+  prevBtn?.addEventListener('click', () => goToSlide(current - 1));
+  nextBtn?.addEventListener('click', () => goToSlide(current + 1));
+  
+  // Dots
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => goToSlide(i));
+  });
   
   // Initialize
-  updateCarousel(false);
+  updateMobile();
 }
 </script>
 
 <style>
-.mobile-swipe-container {
+.swiper-container {
+  position: relative;
+  overflow: hidden;
   touch-action: pan-y;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
-.mobile-swipe-track {
-  display: flex;
-  width: 100%;
+.swiper-track {
   will-change: transform;
 }
 
-.mobile-swipe-slide {
-  flex: 0 0 100%;
+.swiper-slide {
   position: relative;
   user-select: none;
   -webkit-user-select: none;
-  -webkit-touch-callout: none;
 }
 
-.mobile-swipe-slide img {
+.swiper-slide img {
   pointer-events: none;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.mobile-arrow {
-  touch-action: manipulation;
 }
 </style>

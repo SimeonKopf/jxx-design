@@ -1,4 +1,4 @@
-// src/data/languages.js
+// src/data/languages.js - Complete with about section translations
 export const languages = {
   en: {
     // Navigation
@@ -21,6 +21,13 @@ export const languages = {
     aboutText3: "I'm always excited to take on new projects and <strong>commissioned works</strong>, bringing creative ideas to life. I also enjoy traveling and attending various <strong>events</strong> to share my art and get inspired.",
     workWithMe: "Work with me",
     
+    // About section translations for data-translate attributes
+    "about-title": "About Me",
+    "about-text-1": "Hey, I'm <strong>Jonathan Millinger</strong>, a young Pop Art and Graffiti artist from southern Germany. Since 2024, my works are primarily created on <strong>poplar wood boards</strong> – each piece is a <strong>unique creation</strong>. My art lives from bold colors, abstract patterns, and comes to life through various figures or objects in comic design.",
+    "about-text-2": "I love experimenting with new techniques and constantly reinventing myself artistically. Whether <strong>spray paint, acrylic, or mixed media</strong> – for me, art is relaxation and a way to escape everyday life.",
+    "about-text-3": "I'm always excited to take on new projects and <strong>commissioned works</strong>, bringing creative ideas to life. I also enjoy traveling and attending various <strong>events</strong> to share my art and get inspired.",
+    "work-with-me": "Work with me",
+    
     // Contact
     contactTitle: "Get in Touch",
     contactSubtitle: "Ready to discuss a project or commission?",
@@ -32,6 +39,9 @@ export const languages = {
     sending: "Sending...",
     messageSent: "✓ Message Sent!",
     error: "Error - Try Again",
+    
+    // Gallery
+    "gallery-title": "Art Gallery",
     
     // Placeholders
     namePlaceholder: "Your full name",
@@ -80,6 +90,13 @@ export const languages = {
     aboutText3: "Ich freue mich immer, neue Projekte und <strong>Auftragsarbeiten</strong> umzusetzen und dabei kreative Ideen zu verwirklichen. Außerdem bin ich gern unterwegs und besuche unterschiedliche <strong>Events</strong>, um meine Kunst zu teilen und mich inspirieren zu lassen.",
     workWithMe: "Arbeite mit mir",
     
+    // About section translations for data-translate attributes
+    "about-title": "Über mich",
+    "about-text-1": "Hey, ich bin <strong>Jonathan Millinger</strong>, ein junger Pop-Art- und Graffiti-Künstler aus dem Süden Deutschlands. Seit 2024 entstehen meine Arbeiten vor allem auf <strong>Pappelholz-Brettern</strong> – jedes Stück ein <strong>Unikat</strong>. Meine Kunst lebt von kräftigen Farben, abstrakten Mustern und wird durch verschiedene Figuren oder Gegenstände im Comic-Design lebendig.",
+    "about-text-2": "Ich liebe es, neue Techniken auszuprobieren und mich künstlerisch immer wieder neu zu erfinden. Ob <strong>Spraydose, Acryl oder Mixed Media</strong> – für mich ist Kunst Entspannung und ein Weg, dem Alltag zu entfliehen.",
+    "about-text-3": "Ich freue mich immer, neue Projekte und <strong>Auftragsarbeiten</strong> umzusetzen und dabei kreative Ideen zu verwirklichen. Außerdem bin ich gern unterwegs und besuche unterschiedliche <strong>Events</strong>, um meine Kunst zu teilen und mich inspirieren zu lassen.",
+    "work-with-me": "Arbeite mit mir",
+    
     // Contact
     contactTitle: "Kontakt aufnehmen",
     contactSubtitle: "Bereit für ein Projekt oder eine Auftragsarbeit?",
@@ -91,6 +108,9 @@ export const languages = {
     sending: "Wird gesendet...",
     messageSent: "✓ Nachricht gesendet!",
     error: "Fehler - Erneut versuchen",
+    
+    // Gallery
+    "gallery-title": "Kunstgalerie",
     
     // Placeholders
     namePlaceholder: "Ihr vollständiger Name",

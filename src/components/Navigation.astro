@@ -137,42 +137,76 @@ document.addEventListener('DOMContentLoaded', function() {
   // Basic translation
   function translatePage() {
     const translations = {
-      de: { home: 'Startseite', artworks: 'Kunstwerke', about: 'Über mich', contact: 'Kontakt' },
-      en: { home: 'Home', artworks: 'Artworks', about: 'About', contact: 'Contact' }
+      de: { 
+        home: 'Startseite', 
+        artworks: 'Kunstwerke', 
+        about: 'Über mich', 
+        contact: 'Kontakt',
+        'gallery-title': 'Kunstgalerie',
+        'about-title': 'Über mich',
+        'contact-title': 'Kontakt aufnehmen',
+        'about-text-1': 'Hey, ich bin <strong>Jonathan Millinger</strong>, ein junger Pop-Art- und Graffiti-Künstler aus dem Süden Deutschlands. Seit 2024 entstehen meine Arbeiten vor allem auf <strong>Pappelholz-Brettern</strong> – jedes Stück ein <strong>Unikat</strong>. Meine Kunst lebt von kräftigen Farben, abstrakten Mustern und wird durch verschiedene Figuren oder Gegenstände im Comic-Design lebendig.',
+        'about-text-2': 'Ich liebe es, neue Techniken auszuprobieren und mich künstlerisch immer wieder neu zu erfinden. Ob <strong>Spraydose, Acryl oder Mixed Media</strong> – für mich ist Kunst Entspannung und ein Weg, dem Alltag zu entfliehen.',
+        'about-text-3': 'Ich freue mich immer, neue Projekte und <strong>Auftragsarbeiten</strong> umzusetzen und dabei kreative Ideen zu verwirklichen. Außerdem bin ich gern unterwegs und besuche unterschiedliche <strong>Events</strong>, um meine Kunst zu teilen und mich inspirieren zu lassen.',
+        'work-with-me': 'Arbeite mit mir',
+        'sold': 'Verkauft'
+      },
+      en: { 
+        home: 'Home', 
+        artworks: 'Artworks', 
+        about: 'About', 
+        contact: 'Contact',
+        'gallery-title': 'Art Gallery',
+        'about-title': 'About Me',
+        'contact-title': 'Get in Touch',
+        'about-text-1': 'Hey, I\'m <strong>Jonathan Millinger</strong>, a young Pop Art and Graffiti artist from southern Germany. Since 2024, my works are primarily created on <strong>poplar wood boards</strong> – each piece is a <strong>unique creation</strong>. My art lives from bold colors, abstract patterns, and comes to life through various figures or objects in comic design.',
+        'about-text-2': 'I love experimenting with new techniques and constantly reinventing myself artistically. Whether <strong>spray paint, acrylic, or mixed media</strong> – for me, art is relaxation and a way to escape everyday life.',
+        'about-text-3': 'I\'m always excited to take on new projects and <strong>commissioned works</strong>, bringing creative ideas to life. I also enjoy traveling and attending various <strong>events</strong> to share my art and get inspired.',
+        'work-with-me': 'Work with me',
+        'sold': 'Sold'
+      }
     };
     
     const t = translations[currentLang];
-    document.querySelector('a[href="/"]').textContent = t.home;
-    document.querySelector('a[href="/#artworks"]').textContent = t.artworks;
-    document.querySelector('a[href="/#about"]').textContent = t.about;
-    document.querySelector('a[href="/#contact"]').textContent = t.contact;
     
-    // Update mobile nav too
+    // Update desktop navigation (skip home since it's now an icon)
+    const desktopArtworks = document.querySelector('a[href="/#artworks"]');
+    const desktopAbout = document.querySelector('a[href="/#about"]');
+    const desktopContact = document.querySelector('a[href="/#contact"]');
+    
+    if (desktopArtworks) desktopArtworks.textContent = t.artworks;
+    if (desktopAbout) desktopAbout.textContent = t.about;
+    if (desktopContact) desktopContact.textContent = t.contact;
+    
+    // Update mobile nav - find the specific text elements
+    const mobileHomeText = document.querySelector('.mobile-home-text');
     const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-    mobileLinks[0].textContent = t.home;
-    mobileLinks[1].textContent = t.artworks;
-    mobileLinks[2].textContent = t.about;
-    mobileLinks[3].textContent = t.contact;
     
-    // Update page content
+    if (mobileHomeText) mobileHomeText.textContent = t.home;
+    
+    // Update other mobile links (skip the first one since it has the logo)
+    if (mobileLinks.length >= 4) {
+      // Find links by href to be more reliable
+      mobileLinks.forEach(link => {
+        if (link.getAttribute('href') === '/#artworks') {
+          link.textContent = t.artworks;
+        } else if (link.getAttribute('href') === '/#about') {
+          link.textContent = t.about;
+        } else if (link.getAttribute('href') === '/#contact') {
+          link.textContent = t.contact;
+        }
+      });
+    }
+    
+    // Update all elements with data-translate attributes
     document.querySelectorAll('[data-translate]').forEach(el => {
       const key = el.getAttribute('data-translate');
-      const translations = {
-        de: {
-          'gallery-title': 'Kunstgalerie',
-          'about-title': 'Über mich', 
-          'contact-title': 'Kontakt aufnehmen',
-          'sold': 'Verkauft'
-        },
-        en: {
-          'gallery-title': 'Art Gallery',
-          'about-title': 'About Me',
-          'contact-title': 'Get in Touch', 
-          'sold': 'Sold'
+      if (t[key]) {
+        if (key.includes('about-text') || key === 'work-with-me') {
+          el.innerHTML = t[key]; // Use innerHTML for HTML content
+        } else {
+          el.textContent = t[key]; // Use textContent for plain text
         }
-      };
-      if (translations[currentLang][key]) {
-        el.textContent = translations[currentLang][key];
       }
     });
   }

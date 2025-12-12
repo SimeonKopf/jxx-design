@@ -99,24 +99,24 @@ const { series, imageLeft = false } = Astro.props;
     </div>
   </div>
   
-  <!-- Mobile Layout with MORE SPACE and WORKING SWIPE -->
-  <div class="md:hidden px-8">
-    <div class="space-y-8 max-w-sm mx-auto">
+  <!-- Mobile Layout with Responsive Spacing -->
+  <div class="md:hidden px-4 sm:px-6">
+    <div class="space-y-6 sm:space-y-8 max-w-sm mx-auto">
       <div class="text-center">
-        <h3 class="text-xl font-bold text-gray-900 mb-6 epilogue">{series.title}</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-4 sm:mb-6 epilogue">{series.title}</h3>
       </div>
-      
-      <!-- Mobile Carousel with Extra Spacing -->
-      <div class="px-4">
+
+      <!-- Mobile Carousel with Optimized Spacing -->
+      <div class="px-2 sm:px-4">
         <div class="relative bg-white rounded-xl shadow-sm overflow-hidden" id={`mobile-carousel-${series.id}`}>
           <div class="swiper-container">
             <div class="swiper-track flex" style="transform: translateX(0%); transition: none;">
               {series.artworks.map((artwork, index) => (
                 <div class="swiper-slide w-full flex-shrink-0" data-index={index}>
-                  <img 
-                    src={artwork.image} 
+                  <img
+                    src={artwork.image}
                     alt={artwork.title}
-                    class="w-full h-72 object-cover select-none"
+                    class="w-full h-64 sm:h-72 md:h-80 object-cover select-none"
                     draggable="false"
                   />
                   {artwork.sold && (
@@ -130,13 +130,13 @@ const { series, imageLeft = false } = Astro.props;
             
             {series.artworks.length > 1 && (
               <>
-                <button class="swiper-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 text-gray-600 rounded-full p-2 shadow-md z-20">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button class="swiper-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-3 shadow-md z-20 min-w-[44px] min-h-[44px] flex items-center justify-center transition-all duration-200">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                   </svg>
                 </button>
-                <button class="swiper-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 text-gray-600 rounded-full p-2 shadow-md z-20">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button class="swiper-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-3 shadow-md z-20 min-w-[44px] min-h-[44px] flex items-center justify-center transition-all duration-200">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
                 </button>
@@ -145,12 +145,15 @@ const { series, imageLeft = false } = Astro.props;
           </div>
           
           {series.artworks.length > 1 && (
-            <div class="flex justify-center space-x-1.5 py-3 bg-white">
+            <div class="flex justify-center space-x-2 py-4 bg-white">
               {series.artworks.map((_, index) => (
-                <button 
-                  class={`swiper-dot w-1.5 h-1.5 rounded-full transition-colors duration-200 ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'}`}
+                <button
+                  class={`swiper-dot p-2 min-w-[32px] min-h-[32px] flex items-center justify-center transition-colors duration-200`}
                   data-index={index}
-                ></button>
+                  aria-label={`Go to slide ${index + 1}`}
+                >
+                  <span class={`block w-2 h-2 rounded-full ${index === 0 ? 'bg-gray-700' : 'bg-gray-300'}`}></span>
+                </button>
               ))}
             </div>
           )}
@@ -158,8 +161,8 @@ const { series, imageLeft = false } = Astro.props;
       </div>
       
       <!-- Mobile Artwork Info - CLICKABLE TEXT -->
-      <div class="text-center px-4">
-        <div class="bg-gray-50 rounded-xl p-6">
+      <div class="text-center px-2 sm:px-4">
+        <div class="bg-gray-50 rounded-xl p-4 sm:p-6">
           {series.artworks.map((artwork, index) => (
             <div class={`mobile-info ${index === 0 ? 'block' : 'hidden'}`} data-info-index={index}>
               <a href={`/artwork/${artwork.id}`} class="block p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200">
@@ -244,13 +247,16 @@ function initMobile(container) {
   function updateMobile() {
     track.style.transition = 'transform 300ms ease';
     track.style.transform = `translateX(-${current * 100}%)`;
-    
-    // Update dots
+
+    // Update dots (now targeting inner span)
     dots.forEach((dot, i) => {
-      dot.classList.toggle('bg-gray-700', i === current);
-      dot.classList.toggle('bg-gray-300', i !== current);
+      const dotSpan = dot.querySelector('span');
+      if (dotSpan) {
+        dotSpan.classList.toggle('bg-gray-700', i === current);
+        dotSpan.classList.toggle('bg-gray-300', i !== current);
+      }
     });
-    
+
     // Update info
     const section = container.closest('.md\\:hidden');
     const infos = section.querySelectorAll('.mobile-info');
@@ -276,12 +282,12 @@ function initMobile(container) {
   swiperContainer.addEventListener('touchmove', (e) => {
     const currentX = e.touches[0].clientX;
     const diff = currentX - startX;
-    
-    if (Math.abs(diff) > 10) {
+
+    if (Math.abs(diff) > 15) {
       moving = true;
       e.preventDefault();
-      
-      const percent = (diff / track.offsetWidth) * 100;
+
+      const percent = (diff / swiperContainer.offsetWidth) * 100;
       const translate = (-current * 100) + percent;
       track.style.transform = `translateX(${translate}%)`;
     }

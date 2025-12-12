@@ -20,8 +20,8 @@ const { artwork } = Astro.props;
   
   <!-- Artwork Detail Page -->
   <main class="pt-20 min-h-screen bg-white">
-    <!-- Mobile: Extra padding, Desktop: Normal container -->
-    <div class="px-8 md:container py-12">
+    <!-- Responsive padding for all screen sizes -->
+    <div class="px-4 sm:px-6 md:px-8 lg:container py-8 sm:py-12">
       <!-- Back to Gallery -->
       <div class="mb-8">
         <a href="/" class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-300">
@@ -33,9 +33,9 @@ const { artwork } = Astro.props;
       </div>
       
       <!-- Artwork Content -->
-      <div class="grid lg:grid-cols-2 gap-8 md:gap-12 max-w-6xl mx-auto">
-        <!-- Artwork Image with Extra Mobile Spacing -->
-        <div class="space-y-6 px-4 md:px-0">
+      <div class="grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 max-w-6xl mx-auto">
+        <!-- Artwork Image with Responsive Spacing -->
+        <div class="space-y-4 sm:space-y-6 px-2 sm:px-0">
           <div class="bg-gray-50 rounded-2xl overflow-hidden">
             <img 
               src={artwork.image} 
@@ -52,8 +52,8 @@ const { artwork } = Astro.props;
           </div>
         </div>
         
-        <!-- Artwork Details and Contact with Extra Mobile Spacing -->
-        <div class="space-y-8 px-4 md:px-0">
+        <!-- Artwork Details and Contact with Responsive Spacing -->
+        <div class="space-y-6 sm:space-y-8 px-2 sm:px-0">
           <!-- Artwork Info -->
           <div class="space-y-6">
             <div>
@@ -91,8 +91,8 @@ const { artwork } = Astro.props;
           </div>
           
           <!-- Contact Form -->
-          <div class="border-t pt-8">
-            <div class="bg-gray-50 rounded-2xl p-6 md:p-8">
+          <div class="border-t pt-6 sm:pt-8">
+            <div class="bg-gray-50 rounded-2xl p-4 sm:p-6 md:p-8">
               <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 epilogue" data-translate={artwork.sold ? "interested-in-similar" : "interested-in-artwork"}>
                 {artwork.sold ? 'Interested in Similar Work?' : 'Interested in this Artwork?'}
               </h2>

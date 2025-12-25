@@ -28,3 +28,6 @@ pnpm-debug.log*
 jxx_design.pub
 
 code.md
+# Sanity
+.sanity
+dist

@@ -1,5 +1,5 @@
 ---
-// src/components/Contact.astro - Updated with EmailJS integration
+// src/components/Contact.astro - Simple contact with email link
 ---
 
 <section id="contact" class="py-20 bg-white">
@@ -15,303 +15,90 @@
         </p>
         <div class="w-24 h-1 bg-gray-300 mx-auto mt-4"></div>
       </div>
-      
-      <!-- Contact Form -->
-      <div class="bg-gray-50 rounded-2xl p-8 md:p-12">
-        <form id="contact-form" class="space-y-6">
-          <!-- Name and Email Row -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="name" class="block text-sm font-medium text-gray-700 mb-2 epilogue">
-                Name *
-              </label>
-              <input 
-                type="text" 
-                id="name" 
-                name="name" 
-                required 
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 epilogue"
-                placeholder="Your full name"
-              />
-            </div>
-            
-            <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-2 epilogue">
-                Email *
-              </label>
-              <input 
-                type="email" 
-                id="email" 
-                name="email" 
-                required 
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 epilogue"
-                placeholder="your@email.com"
-              />
-            </div>
+
+      <!-- Contact Info -->
+      <div class="bg-gray-50 rounded-2xl p-8 md:p-12 text-center space-y-8">
+        <!-- Email Box -->
+        <div class="space-y-6">
+          <div class="flex justify-center">
+            <svg class="w-16 h-16 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
           </div>
-          
-          <!-- Subject -->
+
           <div>
-            <label for="subject" class="block text-sm font-medium text-gray-700 mb-2 epilogue">
-              Subject
-            </label>
-            <input 
-              type="text" 
-              id="subject" 
-              name="subject" 
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 epilogue"
-              placeholder="Project inquiry, commission, etc."
-            />
+            <h3 class="text-2xl font-bold text-gray-900 mb-3 epilogue">Kontaktieren Sie mich</h3>
+            <p class="text-gray-600 mb-6">
+              Für Anfragen zu Kunstwerken, Kommissionen oder allgemeine Fragen, schreiben Sie mir gerne eine Email.
+            </p>
           </div>
-          
-          <!-- Message -->
-          <div>
-            <label for="message" class="block text-sm font-medium text-gray-700 mb-2 epilogue">
-              Message *
-            </label>
-            <textarea 
-              id="message" 
-              name="message" 
-              rows="6" 
-              required
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 resize-none epilogue"
-              placeholder="Tell me about your project..."
-            ></textarea>
-          </div>
-          
-          <!-- Submit Button -->
-          <button 
-            type="submit" 
-            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl epilogue"
+
+          <!-- Email Button -->
+          <a
+            href="mailto:info@jxx-design.com?subject=Anfrage über JXX Design Website"
+            class="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl epilogue min-h-[56px] text-lg"
           >
-            Send Message
-          </button>
-        </form>
-        
-        <!-- Success/Error Messages -->
-        <div id="form-message" class="mt-4 p-4 rounded-lg hidden">
-          <p id="message-text" class="text-sm font-medium"></p>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            <span>info@jxx-design.com</span>
+          </a>
+
+          <p class="text-sm text-gray-500 mt-4">
+            Der Klick öffnet Ihr Standard-Email-Programm
+          </p>
         </div>
-        
-        <!-- Contact Info -->
-        <div class="mt-12 pt-8 border-t border-gray-200">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center md:text-left">
-            <!-- Email -->
-            <div class="flex flex-col md:flex-row items-center md:items-start space-y-2 md:space-y-0 md:space-x-4">
-              <div class="bg-blue-100 p-3 rounded-full">
-                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                </svg>
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-900 epilogue">Email</h3>
-                <a href="mailto:jxx.design@gmail.com" class="text-blue-600 hover:text-blue-700 transition-colors epilogue">
-                  jxx.design@gmail.com
-                </a>
-              </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-200 my-8"></div>
+
+        <!-- Contact Info Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+          <!-- Response Time -->
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
             </div>
-            
-            <!-- Instagram -->
-            <div class="flex flex-col md:flex-row items-center md:items-start space-y-2 md:space-y-0 md:space-x-4">
-              <div class="bg-purple-100 p-3 rounded-full">
-                <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-900 epilogue">Instagram</h3>
-                <a href="https://instagram.com/jxx_design" target="_blank" class="text-purple-600 hover:text-purple-700 transition-colors epilogue">
-                  @jxx_design
-                </a>
-              </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 mb-1 epilogue">Antwortzeit</h4>
+              <p class="text-gray-600 text-sm">
+                Ich antworte in der Regel innerhalb von 24-48 Stunden
+              </p>
             </div>
           </div>
+
+          <!-- Social Media -->
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <svg class="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 mb-1 epilogue">Social Media</h4>
+              <a href="https://instagram.com/jxx_design" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 text-sm transition-colors">
+                @jxx_design auf Instagram
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alternative Note -->
+        <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
+          <p class="text-sm text-gray-700">
+            <strong>Hinweis:</strong> Bei Anfragen zu spezifischen Kunstwerken bitte die Artwork-ID (z.B. #001) angeben.
+          </p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- EmailJS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-<script>
-  // EmailJS Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
-  const EMAILJS_CONFIG = {
-    SERVICE_ID: 'service_0uu148h',        // Replace with your service ID
-    TEMPLATE_ID: 'template_nyi4lhk',      // Replace with your template ID
-    PUBLIC_KEY: 'khOTmY1cpKsPrjL26'         // Replace with your public key
-  };
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initialize EmailJS
-    emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
-    
-    const form = document.getElementById('contact-form');
-    const messageDiv = document.getElementById('form-message');
-    const messageText = document.getElementById('message-text');
-    
-    // Get current language
-    const currentLang = localStorage.getItem('jxx-language') || 'de';
-    const translations = {
-      de: {
-        namePlaceholder: 'Ihr vollständiger Name',
-        emailPlaceholder: 'ihre@email.de',
-        subjectPlaceholder: 'Projektanfrage, Auftragsarbeit, etc.',
-        messagePlaceholder: 'Erzählen Sie mir von Ihrem Projekt...',
-        sending: 'Wird gesendet...',
-        messageSent: '✓ Nachricht gesendet!',
-        successMessage: 'Vielen Dank! Ihre Nachricht wurde erfolgreich gesendet.',
-        errorMessage: 'Entschuldigung, beim Senden ist ein Fehler aufgetreten.',
-        requiredFieldsError: 'Bitte füllen Sie alle Pflichtfelder aus.',
-        error: 'Fehler - Erneut versuchen',
-        name: 'Name',
-        email: 'E-Mail',
-        subject: 'Betreff',
-        message: 'Nachricht',
-        send: 'Nachricht senden'
-      },
-      en: {
-        namePlaceholder: 'Your full name',
-        emailPlaceholder: 'your@email.com',
-        subjectPlaceholder: 'Project inquiry, commission, etc.',
-        messagePlaceholder: 'Tell me about your project...',
-        sending: 'Sending...',
-        messageSent: '✓ Message Sent!',
-        successMessage: 'Thank you! Your message has been sent successfully.',
-        errorMessage: 'Sorry, there was an error sending your message.',
-        requiredFieldsError: 'Please fill in all required fields.',
-        error: 'Error - Try Again',
-        name: 'Name',
-        email: 'Email',
-        subject: 'Subject',
-        message: 'Message',
-        send: 'Send Message'
-      }
-    };
-    
-    const t = translations[currentLang];
-    
-    // Update form with current language
-    function updateFormLanguage() {
-      // Update placeholders
-      document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
-        const key = el.getAttribute('data-translate-placeholder');
-        if (t[key + 'Placeholder']) {
-          el.placeholder = t[key + 'Placeholder'];
-        }
-      });
-      
-      // Update labels
-      document.querySelectorAll('[data-translate]').forEach(el => {
-        const key = el.getAttribute('data-translate');
-        if (t[key]) {
-          el.textContent = t[key];
-        }
-      });
-    }
-    
-    // Initialize form language
-    updateFormLanguage();
-    
-    // Show message function
-    function showMessage(message, type) {
-      messageDiv.classList.remove('hidden');
-      messageText.textContent = message;
-      
-      if (type === 'success') {
-        messageDiv.className = 'mt-4 p-4 rounded-lg bg-green-100 border border-green-300';
-        messageText.className = 'text-sm font-medium text-green-800';
-      } else if (type === 'error') {
-        messageDiv.className = 'mt-4 p-4 rounded-lg bg-red-100 border border-red-300';
-        messageText.className = 'text-sm font-medium text-red-800';
-      }
-      
-      // Auto-hide after 5 seconds
-      setTimeout(() => {
-        messageDiv.classList.add('hidden');
-      }, 5000);
-    }
-    
-    form?.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const submitBtn = this.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-      
-      // Validate required fields
-      const name = this.querySelector('#name').value.trim();
-      const email = this.querySelector('#email').value.trim();
-      const message = this.querySelector('#message').value.trim();
-      
-      if (!name || !email || !message) {
-        showMessage('Please fill in all required fields.', 'error');
-        return;
-      }
-      
-      // Show loading state
-      submitBtn.textContent = 'Sending...';
-      submitBtn.disabled = true;
-      submitBtn.classList.add('opacity-75');
-      
-      try {
-        // Prepare template parameters
-        const templateParams = {
-          name: name,
-          email: email,
-          subject: this.querySelector('#subject').value || 'Contact Form Submission',
-          message: message
-        };
-        
-        // Send email via EmailJS
-        const response = await emailjs.send(
-          EMAILJS_CONFIG.SERVICE_ID,
-          EMAILJS_CONFIG.TEMPLATE_ID,
-          templateParams,
-          EMAILJS_CONFIG.PUBLIC_KEY
-        );
-        
-        console.log('EmailJS Response:', response);
-        
-        // Show success state
-        submitBtn.textContent = '✓ Message Sent!';
-        submitBtn.classList.remove('from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
-        submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
-        
-        // Show success message
-        showMessage('Thank you! Your message has been sent successfully. I\'ll get back to you soon.', 'success');
-        
-        // Reset form ≈after delay
-        setTimeout(() => {
-          this.reset();
-          submitBtn.textContent = originalText;
-          submitBtn.disabled = false;
-          submitBtn.classList.remove('opacity-75', 'bg-green-600', 'hover:bg-green-700');
-          submitBtn.classList.add('from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
-        }, 3000);
-        
-      } catch (error) {
-        console.error('EmailJS Error:', error);
-        
-        // Show error state
-        submitBtn.textContent = 'Error - Try Again';
-        submitBtn.classList.remove('from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
-        submitBtn.classList.add('bg-red-600', 'hover:bg-red-700');
-        
-        // Show error message
-        let errorMessage = 'Sorry, there was an error sending your message. Please try again.';
-        if (error.text) {
-          errorMessage += ` (${error.text})`;
-        }
-        showMessage(errorMessage, 'error');
-        
-        setTimeout(() => {
-          submitBtn.textContent = originalText;
-          submitBtn.disabled = false;
-          submitBtn.classList.remove('opacity-75', 'bg-red-600', 'hover:bg-red-700');
-          submitBtn.classList.add('from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
-        }, 3000);
-      }
-    });
-  });
-</script>
+<style>
+  /* Smooth transitions */
+  a {
+    transition: all 0.3s ease;
+  }
+</style>

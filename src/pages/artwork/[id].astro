@@ -90,274 +90,42 @@ const { artwork } = Astro.props;
             )}
           </div>
           
-          <!-- Contact Form -->
+          <!-- Contact Section -->
           <div class="border-t pt-6 sm:pt-8">
-            <div class="bg-gray-50 rounded-2xl p-4 sm:p-6 md:p-8">
-              <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 epilogue" data-translate={artwork.sold ? "interested-in-similar" : "interested-in-artwork"}>
+            <div class="bg-gray-50 rounded-2xl p-4 sm:p-6 md:p-8 text-center space-y-6">
+              <h2 class="text-xl md:text-2xl font-bold text-gray-900 epilogue">
                 {artwork.sold ? 'Interested in Similar Work?' : 'Interested in this Artwork?'}
               </h2>
-              
-              <form id="artwork-inquiry-form" class="space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2 epilogue">
-                      <span data-translate="name">Name</span> *
-                    </label>
-                    <input 
-                      type="text" 
-                      id="name" 
-                      name="name" 
-                      required 
-                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 epilogue"
-                      placeholder=""
-                    />
-                  </div>
-                  
-                  <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2 epilogue">
-                      <span data-translate="email">Email</span> *
-                    </label>
-                    <input 
-                      type="email" 
-                      id="email" 
-                      name="email" 
-                      required 
-                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 epilogue"
-                      placeholder=""
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label for="subject" class="block text-sm font-medium text-gray-700 mb-2 epilogue" data-translate="subject">Subject</label>
-                  <input 
-                    type="text" 
-                    id="subject" 
-                    name="subject" 
-                    readonly
-                    value={`Artwork Inquiry: #${artwork.id} - ${artwork.title}`}
-                    class="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg cursor-not-allowed epilogue"
-                  />
-                </div>
-                
-                <div>
-                  <label for="message" class="block text-sm font-medium text-gray-700 mb-2 epilogue">
-                    <span data-translate="message">Message</span> *
-                  </label>
-                  <textarea 
-                    id="message" 
-                    name="message" 
-                    rows="5" 
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 resize-none epilogue"
-                    placeholder=""
-                    data-artwork-sold={artwork.sold ? 'true' : 'false'}
-                  ></textarea>
-                </div>
-                
-                <button 
-                  type="submit" 
-                  class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl epilogue"
-                  data-translate="send-inquiry"
-                >
-                  Send Inquiry
-                </button>
-              </form>
-              
-              <!-- Success/Error Messages -->
-              <div id="form-message" class="mt-4 p-4 rounded-lg hidden">
-                <p id="message-text" class="text-sm font-medium"></p>
+
+              <p class="text-gray-600">
+                {artwork.sold
+                  ? 'Dieses Werk wurde verkauft, aber ich habe ähnliche Arbeiten. Kontaktieren Sie mich für mehr Informationen.'
+                  : 'Kontaktieren Sie mich für weitere Informationen zu diesem Kunstwerk, Preis und Verfügbarkeit.'
+                }
+              </p>
+
+              <!-- Email Button -->
+              <a
+                href={`mailto:info@jxx-design.com?subject=Anfrage zu Artwork ${artwork.id} - ${artwork.title}&body=Hallo,%0D%0A%0D%0AIch interessiere mich für das Kunstwerk:%0D%0A- ID: ${artwork.id}%0D%0A- Titel: ${artwork.title}%0D%0A- Preis: €${artwork.price}%0D%0A%0D%0ABitte kontaktieren Sie mich für weitere Informationen.%0D%0A%0D%0AMit freundlichen Grüßen`}
+                class="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl epilogue min-h-[56px] text-lg"
+              >
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                <span>Per Email anfragen</span>
+              </a>
+
+              <p class="text-sm text-gray-500">
+                Der Klick öffnet Ihr Email-Programm mit vorausgefüllter Anfrage zu Artwork #{artwork.id}
+              </p>
+
+              <!-- Additional Info -->
+              <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100 text-left">
+                <p class="text-sm text-gray-700">
+                  <strong>Tipp:</strong> In der Email finden Sie bereits alle wichtigen Informationen zum Kunstwerk. Sie können Ihre Nachricht gerne personalisieren.
+                </p>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </main>
 </Layout>
-
-<!-- EmailJS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-<script>
-  // EmailJS Configuration
-  const EMAILJS_CONFIG = {
-    SERVICE_ID: 'service_0uu148h',        // Replace with your service ID
-    TEMPLATE_ID: 'template_nyi4lhk',      // Replace with your template ID
-    PUBLIC_KEY: 'khOTmY1cpKsPrjL26'         // Replace with your public key
-  };
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initialize EmailJS
-    emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
-    
-    const form = document.getElementById('artwork-inquiry-form');
-    const messageDiv = document.getElementById('form-message');
-    const messageText = document.getElementById('message-text');
-    const messageTextarea = document.getElementById('message');
-    
-    // Get current language and translations
-    const currentLang = localStorage.getItem('jxx-language') || 'de';
-    const translations = {
-      de: {
-        namePlaceholder: 'Ihr vollständiger Name',
-        emailPlaceholder: 'ihre@email.de',
-        messagePlaceholder: 'Erzählen Sie mir von Ihrem Projekt...',
-        purchaseInquiry: 'Ich interessiere mich für den Kauf dieses Kunstwerks. Bitte geben Sie mir weitere Informationen über die Verfügbarkeit und Kaufdetails.',
-        similarInquiry: 'Ich interessiere mich für ähnliche Kunstwerke oder möchte über neue Werke informiert werden.',
-        sending: 'Wird gesendet...',
-        messageSent: '✓ Nachricht gesendet!',
-        successMessage: 'Vielen Dank! Ihre Nachricht wurde erfolgreich gesendet.',
-        errorMessage: 'Entschuldigung, beim Senden ist ein Fehler aufgetreten.',
-        requiredFieldsError: 'Bitte füllen Sie alle Pflichtfelder aus.',
-        error: 'Fehler - Erneut versuchen'
-      },
-      en: {
-        namePlaceholder: 'Your full name',
-        emailPlaceholder: 'your@email.com', 
-        messagePlaceholder: 'Tell me about your project...',
-        purchaseInquiry: 'I am interested in purchasing this artwork. Please provide more information about availability and purchase details.',
-        similarInquiry: 'I am interested in similar artworks or would like to be notified of new pieces.',
-        sending: 'Sending...',
-        messageSent: '✓ Message Sent!',
-        successMessage: 'Thank you! Your message has been sent successfully.',
-        errorMessage: 'Sorry, there was an error sending your message.',
-        requiredFieldsError: 'Please fill in all required fields.',
-        error: 'Error - Try Again'
-      }
-    };
-    
-    const t = translations[currentLang];
-    
-    // Setup form
-    function setupForm() {
-      document.getElementById('name').placeholder = t.namePlaceholder;
-      document.getElementById('email').placeholder = t.emailPlaceholder;
-      
-      const isArtworkSold = messageTextarea.dataset.artworkSold === 'true';
-      if (!messageTextarea.value.trim()) {
-        messageTextarea.placeholder = t.messagePlaceholder;
-        messageTextarea.value = isArtworkSold ? t.similarInquiry : t.purchaseInquiry;
-      }
-      
-      // Update all page translations
-      updatePageTranslations();
-    }
-    
-    // Update page translations
-    function updatePageTranslations() {
-      // Update elements with data-translate attributes
-      document.querySelectorAll('[data-translate]').forEach(el => {
-        const key = el.getAttribute('data-translate');
-        if (t[key]) {
-          el.textContent = t[key];
-        }
-      });
-      
-      // Update form labels
-      const labels = {
-        'name': t.name,
-        'email': t.email,
-        'subject': t.subject,
-        'message': t.message
-      };
-      
-      Object.entries(labels).forEach(([fieldName, labelText]) => {
-        const label = document.querySelector(`label[for="${fieldName}"]`);
-        if (label) {
-          const span = label.querySelector('span[data-translate]');
-          if (span) {
-            span.textContent = labelText;
-          }
-        }
-      });
-      
-      // Update button text
-      const submitBtn = document.querySelector('button[type="submit"]');
-      if (submitBtn && submitBtn.textContent.includes('Send') || submitBtn.textContent.includes('Anfrage')) {
-        submitBtn.textContent = t.sendInquiry;
-      }
-    }
-    
-    // Listen for language changes
-    window.addEventListener('storage', function(e) {
-      if (e.key === 'jxx-language') {
-        // Language changed, update current language and re-setup
-        const newLang = localStorage.getItem('jxx-language') || 'de';
-        if (newLang !== currentLang) {
-          window.location.reload(); // Reload to get new translations
-        }
-      }
-    });
-    
-    setupForm();
-    
-    // Form submission
-    form?.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const submitBtn = this.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
-      
-      const name = this.querySelector('#name').value.trim();
-      const email = this.querySelector('#email').value.trim();
-      const message = this.querySelector('#message').value.trim();
-      
-      if (!name || !email || !message) {
-        showMessage(t.requiredFieldsError, 'error');
-        return;
-      }
-      
-      submitBtn.textContent = t.sending;
-      submitBtn.disabled = true;
-      
-      try {
-        const response = await emailjs.send(
-          EMAILJS_CONFIG.SERVICE_ID,
-          EMAILJS_CONFIG.TEMPLATE_ID,
-          {
-            name: name,
-            email: email,
-            subject: this.querySelector('#subject').value,
-            message: message
-          },
-          EMAILJS_CONFIG.PUBLIC_KEY
-        );
-        
-        submitBtn.textContent = t.messageSent;
-        showMessage(t.successMessage, 'success');
-        
-        setTimeout(() => {
-          this.reset();
-          setupForm();
-          submitBtn.textContent = originalText;
-          submitBtn.disabled = false;
-        }, 3000);
-        
-      } catch (error) {
-        submitBtn.textContent = t.error;
-        showMessage(t.errorMessage, 'error');
-        
-        setTimeout(() => {
-          submitBtn.textContent = originalText;
-          submitBtn.disabled = false;
-        }, 3000);
-      }
-    });
-    
-    function showMessage(message, type) {
-      messageDiv.classList.remove('hidden');
-      messageText.textContent = message;
-      
-      if (type === 'success') {
-        messageDiv.className = 'mt-4 p-4 rounded-lg bg-green-100 border border-green-300';
-        messageText.className = 'text-sm font-medium text-green-800';
-      } else {
-        messageDiv.className = 'mt-4 p-4 rounded-lg bg-red-100 border border-red-300';
-        messageText.className = 'text-sm font-medium text-red-800';
-      }
-      
-      setTimeout(() => messageDiv.classList.add('hidden'), 5000);
-    }
-  });
-</script>

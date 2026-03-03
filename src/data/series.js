@@ -32,7 +32,7 @@ export const series = [
         year: "2026",
         price: "300",
         sold: false,
-        image: "public/img/shop/love_your_self_300.jpeg",
+        image: "/img/shop/love_your_self_300.jpeg",
         description: ""
       },
 
@@ -51,7 +51,7 @@ export const series = [
         year: "2026",
         price: "1200",
         sold: false,
-        image: "public/img/shop/spread_love_1200.jpeg",
+        image: "/img/shop/spread_love_1200.jpeg",
         description: ""
       },
     ]

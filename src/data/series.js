@@ -14,7 +14,7 @@ export const series = [
         price: "350",
         sold: false,
         image: "/img/shop/cherry_300.jpeg",
-        description: ""
+        description: "Unikat"
       },
 
     ]
@@ -27,32 +27,32 @@ export const series = [
       {
         id: "002",
         title: "Love your self",
-        dimensions: "48 x 60 inches",
+        dimensions: "",
         medium: "",
         year: "2026",
         price: "300",
         sold: false,
         image: "/img/shop/love_your_self_300.jpeg",
-        description: ""
+        description: "Unikat"
       },
 
     ]
   },
   {
-    id: "Spread_Love",
-    title: "Spread Love",
+    id: "kitchen_party",
+    title: "Pine cones",
     description: "",
     artworks: [
       {
         id: "003",
-        title: "Spread Love",
+        title: "Pine Cones",
         dimensions: "",
         medium: "",
-        year: "2026",
-        price: "1200",
+        year: "2024",
+        price: "1500",
         sold: false,
-        image: "/img/shop/spread_love_1200.jpeg",
-        description: ""
+        image: "/img/shop/kitchen_party.jpeg",
+        description: "Dieses Bild entstand bei der Küchenparty von dem Hotel Ritter 2024. Und es handelt sich hierbei um ein Unikat"
       },
     ]
   },

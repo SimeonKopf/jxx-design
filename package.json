@@ -9,7 +9,10 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
     "@astrojs/tailwind": "^6.0.2",
+    "@fontsource-variable/epilogue": "^5.2.8",
+    "@fontsource/permanent-marker": "^5.2.7",
     "@tailwindcss/vite": "^4.1.11",
     "astro": "^5.12.7",
     "sharp": "^0.34.3",

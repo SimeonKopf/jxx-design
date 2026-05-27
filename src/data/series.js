@@ -13,7 +13,7 @@ export const series = [
         year: "2026",
         price: "350",
         sold: false,
-        image: "/img/shop/cherry_300.jpeg",
+        image: "cherry_300.jpeg",
         description: "Unikat"
       },
 
@@ -32,7 +32,7 @@ export const series = [
         year: "2026",
         price: "300",
         sold: false,
-        image: "/img/shop/love_your_self_300.jpeg",
+        image: "love_your_self_300.jpeg",
         description: "Unikat"
       },
 
@@ -51,7 +51,7 @@ export const series = [
         year: "2024",
         price: "1500",
         sold: false,
-        image: "/img/shop/kitchen_party.jpeg",
+        image: "kitchen_party.jpeg",
         description: "Dieses Bild entstand bei der Küchenparty von dem Hotel Ritter 2024. Und es handelt sich hierbei um ein Unikat"
       },
     ]

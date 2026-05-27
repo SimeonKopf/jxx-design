@@ -1,6 +1,10 @@
 ---
 import Footer from '../components/Footer.astro';
 import CookieConsent from '../components/CookieConsent.astro';
+import { languages } from '../data/languages.js';
+// Schriften lokal/self-hosted laden (DSGVO – keine Verbindung zu Google-Servern)
+import '@fontsource-variable/epilogue';
+import '@fontsource/permanent-marker';
 
 export interface Props {
   title: string;
@@ -11,17 +15,21 @@ const { title, description = "JXX Design - Graffiti Artist Portfolio" } = Astro.
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
+    <!-- Sprache so früh wie möglich setzen (vor dem Rendern), um Flackern zu minimieren -->
+    <script is:inline>
+      (function () {
+        try {
+          document.documentElement.lang = localStorage.getItem('jxx-language') || 'de';
+        } catch (e) {}
+      })();
+    </script>
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
     <style>
       /* Reset and base styles */
       * {
@@ -31,7 +39,7 @@ const { title, description = "JXX Design - Graffiti Artist Portfolio" } = Astro.
       }
       
       body {
-        font-family: 'Epilogue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        font-family: 'Epilogue Variable', 'Epilogue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         line-height: 1.6;
         color: #1a1a1a;
         background-color: #ffffff;
@@ -46,7 +54,15 @@ const { title, description = "JXX Design - Graffiti Artist Portfolio" } = Astro.
       
       /* Epilogue font for everything else */
       .epilogue {
-        font-family: 'Epilogue', sans-serif;
+        font-family: 'Epilogue Variable', 'Epilogue', sans-serif;
+      }
+
+      /* Einheitlicher, sichtbarer Fokus-Ring für Tastatur-Navigation (a11y) */
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid #4facfe;
+        outline-offset: 2px;
+        border-radius: 4px;
       }
       
       /* Clean modern typography */
@@ -314,5 +330,47 @@ const { title, description = "JXX Design - Graffiti Artist Portfolio" } = Astro.
     <slot />
     <Footer />
     <CookieConsent />
+
+    <!-- Zentrale Übersetzung: eine Source of Truth (languages.js), als JSON eingebettet. -->
+    <script define:vars={{ JXX_TRANSLATIONS: languages }}>
+      window.JXX_TRANSLATIONS = JXX_TRANSLATIONS;
+
+      window.JXX = {
+        getLang() {
+          try {
+            return localStorage.getItem('jxx-language') || 'de';
+          } catch (e) {
+            return 'de';
+          }
+        },
+        setLang(lang) {
+          try {
+            localStorage.setItem('jxx-language', lang);
+          } catch (e) {}
+          this.apply();
+          document.dispatchEvent(new CustomEvent('jxx:langchange', { detail: { lang } }));
+        },
+        apply() {
+          const lang = this.getLang();
+          const dict = window.JXX_TRANSLATIONS[lang] || window.JXX_TRANSLATIONS.de;
+          document.documentElement.lang = lang;
+
+          document.querySelectorAll('[data-translate]').forEach((el) => {
+            const val = dict[el.getAttribute('data-translate')];
+            if (val != null) el.innerHTML = val;
+          });
+          document.querySelectorAll('[data-translate-placeholder]').forEach((el) => {
+            const val = dict[el.getAttribute('data-translate-placeholder')];
+            if (val != null) el.setAttribute('placeholder', val);
+          });
+        },
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => window.JXX.apply());
+      } else {
+        window.JXX.apply();
+      }
+    </script>
   </body>
 </html>

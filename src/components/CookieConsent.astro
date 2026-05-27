@@ -6,10 +6,10 @@
   <div class="container mx-auto max-w-6xl">
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div class="flex-1">
-        <h3 class="text-lg font-bold mb-2 epilogue">🍪 Cookies & Datenschutz</h3>
-        <p class="text-sm text-gray-300">
-          Diese Website verwendet nur technisch notwendige Cookies für die Kontaktformular-Funktion.
-          Es findet kein Tracking oder Analytics statt. Mehr Informationen finden Sie in unserer
+        <h3 class="text-lg font-bold mb-2 epilogue"><span aria-hidden="true">🍪</span> <span data-translate="cookie-title">Cookies & Datenschutz</span></h3>
+        <p class="text-sm text-gray-300" data-translate="cookie-text">
+          Diese Website verwendet nur technisch notwendige Cookies.
+          Es findet kein Tracking und keine Analyse statt. Mehr dazu in unserer
           <a href="/datenschutz" class="underline hover:text-white">Datenschutzerklärung</a>.
         </p>
       </div>
@@ -17,12 +17,14 @@
         <button
           id="cookie-accept"
           class="bg-white text-gray-900 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 epilogue min-h-[44px]"
+          data-translate="cookie-accept"
         >
           Verstanden
         </button>
         <a
           href="/datenschutz"
           class="bg-gray-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-600 transition-colors duration-200 epilogue flex items-center justify-center min-h-[44px]"
+          data-translate="cookie-learn-more"
         >
           Mehr erfahren
         </a>

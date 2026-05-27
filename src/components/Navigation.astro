@@ -23,22 +23,22 @@ import logoImage from '../assets/logoJXX-modified.png';
       
       <!-- Desktop Menu -->
       <div class="hidden lg:flex items-center space-x-8">
-        <a href="/" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium epilogue">
-          Home
+        <a href="/" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium epilogue" data-translate="home">
+          Startseite
         </a>
-        <a href="/#artworks" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium epilogue">
-          Artworks
+        <a href="/#artworks" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium epilogue" data-translate="artworks">
+          Kunstwerke
         </a>
-        <a href="/#about" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium epilogue">
-          About
+        <a href="/#about" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium epilogue" data-translate="about">
+          Über mich
         </a>
-        <a href="/#contact" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium epilogue">
-          Contact
+        <a href="/#contact" class="nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium epilogue" data-translate="contact">
+          Kontakt
         </a>
         
         <!-- Desktop Language Switcher -->
         <div class="ml-4 relative">
-          <button id="desktop-lang-btn" class="bg-white/10 backdrop-blur-sm border border-gray-300 hover:bg-gray-50 text-gray-700 px-3 py-2 rounded-full text-sm font-medium epilogue flex items-center space-x-1">
+          <button id="desktop-lang-btn" class="bg-white/10 backdrop-blur-sm border border-gray-300 hover:bg-gray-50 text-gray-700 px-3 py-2 rounded-full text-sm font-medium epilogue flex items-center space-x-1" aria-label="Sprache wählen" aria-haspopup="true">
             <span id="desktop-lang-text">DE</span>
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -52,8 +52,8 @@ import logoImage from '../assets/logoJXX-modified.png';
       </div>
       
       <!-- Mobile menu button -->
-      <button id="mobile-menu-button" class="lg:hidden text-gray-700 hover:text-gray-900 transition-colors duration-300 p-2 z-[60]">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button id="mobile-menu-button" class="lg:hidden text-gray-700 hover:text-gray-900 transition-colors duration-300 p-2 z-[60]" aria-label="Menü öffnen" aria-controls="mobile-menu" aria-expanded="false">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
       </button>
@@ -62,17 +62,17 @@ import logoImage from '../assets/logoJXX-modified.png';
     <!-- Mobile menu -->
     <div id="mobile-menu" class="lg:hidden hidden mt-4 pb-4 border-t border-gray-200 pt-4">
       <div class="flex flex-col space-y-4">
-        <a href="/" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue">
-          Home
+        <a href="/" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue" data-translate="home">
+          Startseite
         </a>
-        <a href="/#artworks" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue">
-          Artworks
+        <a href="/#artworks" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue" data-translate="artworks">
+          Kunstwerke
         </a>
-        <a href="/#about" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue">
-          About
+        <a href="/#about" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue" data-translate="about">
+          Über mich
         </a>
-        <a href="/#contact" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue">
-          Contact
+        <a href="/#contact" class="mobile-nav-link text-gray-700 hover:text-gray-900 transition-colors duration-300 font-medium block py-3 epilogue" data-translate="contact">
+          Kontakt
         </a>
         
         <!-- Mobile Language Switcher -->
@@ -93,185 +93,113 @@ import logoImage from '../assets/logoJXX-modified.png';
 </nav>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const mobileMenuButton = document.getElementById('mobile-menu-button');
   const mobileMenu = document.getElementById('mobile-menu');
   const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-  
+
   // Desktop language switcher
   const desktopLangBtn = document.getElementById('desktop-lang-btn');
   const desktopLangMenu = document.getElementById('desktop-lang-menu');
   const desktopLangText = document.getElementById('desktop-lang-text');
   const desktopLangOptions = document.querySelectorAll('.desktop-lang-option');
-  
+
   // Mobile language switcher
   const mobileLangOptions = document.querySelectorAll('.mobile-lang-option');
-  
-  let currentLang = localStorage.getItem('jxx-language') || 'de';
-  
-  // Update language display
+
+  // Sprache kommt zentral von window.JXX (siehe Layout.astro)
+  const i18n = window.JXX;
+
+  function currentLang() {
+    return i18n ? i18n.getLang() : 'de';
+  }
+
+  // Anzeige der aktiven Sprache aktualisieren
   function updateLanguageDisplay() {
-    desktopLangText.textContent = currentLang.toUpperCase();
-    
-    // Update active states
-    desktopLangOptions.forEach(opt => {
-      opt.classList.toggle('bg-blue-50', opt.dataset.lang === currentLang);
+    const lang = currentLang();
+    if (desktopLangText) desktopLangText.textContent = lang.toUpperCase();
+
+    desktopLangOptions.forEach((opt) => {
+      opt.classList.toggle('bg-blue-50', opt.dataset.lang === lang);
     });
-    
-    mobileLangOptions.forEach(opt => {
-      opt.classList.toggle('bg-blue-100', opt.dataset.lang === currentLang);
-      opt.classList.toggle('text-blue-800', opt.dataset.lang === currentLang);
+    mobileLangOptions.forEach((opt) => {
+      opt.classList.toggle('bg-blue-100', opt.dataset.lang === lang);
+      opt.classList.toggle('text-blue-800', opt.dataset.lang === lang);
     });
   }
-  
-  // Change language
+
+  // Sprache wechseln – delegiert an die zentrale Übersetzung
   function changeLanguage(lang) {
-    currentLang = lang;
-    localStorage.setItem('jxx-language', lang);
+    if (i18n) i18n.setLang(lang);
     updateLanguageDisplay();
-    translatePage();
     closeMobileMenu();
     closeDesktopLangMenu();
   }
-  
-  // Basic translation
-  function translatePage() {
-    const translations = {
-      de: { 
-        home: 'Startseite', 
-        artworks: 'Kunstwerke', 
-        about: 'Über mich', 
-        contact: 'Kontakt',
-        'gallery-title': 'Kunstgalerie',
-        'about-title': 'Über mich',
-        'contact-title': 'Kontakt aufnehmen',
-        'about-text-1': 'Hey, ich bin <strong>Jonathan Millinger</strong>, ein junger Pop-Art- und Graffiti-Künstler aus dem Süden Deutschlands. Seit 2024 entstehen meine Arbeiten vor allem auf <strong>Pappelholz-Brettern</strong> – jedes Stück ein <strong>Unikat</strong>. Meine Kunst lebt von kräftigen Farben, abstrakten Mustern und wird durch verschiedene Figuren oder Gegenstände im Comic-Design lebendig.',
-        'about-text-2': 'Ich liebe es, neue Techniken auszuprobieren und mich künstlerisch immer wieder neu zu erfinden. Ob <strong>Spraydose, Acryl oder Mixed Media</strong> – für mich ist Kunst Entspannung und ein Weg, dem Alltag zu entfliehen.',
-        'about-text-3': 'Ich freue mich immer, neue Projekte und <strong>Auftragsarbeiten</strong> umzusetzen und dabei kreative Ideen zu verwirklichen. Außerdem bin ich gern unterwegs und besuche unterschiedliche <strong>Events</strong>, um meine Kunst zu teilen und mich inspirieren zu lassen.',
-        'work-with-me': 'Arbeite mit mir',
-        'sold': 'Verkauft'
-      },
-      en: { 
-        home: 'Home', 
-        artworks: 'Artworks', 
-        about: 'About', 
-        contact: 'Contact',
-        'gallery-title': 'Art Gallery',
-        'about-title': 'About Me',
-        'contact-title': 'Get in Touch',
-        'about-text-1': 'Hey, I\'m <strong>Jonathan Millinger</strong>, a young Pop Art and Graffiti artist from southern Germany. Since 2024, my works are primarily created on <strong>poplar wood boards</strong> – each piece is a <strong>unique creation</strong>. My art lives from bold colors, abstract patterns, and comes to life through various figures or objects in comic design.',
-        'about-text-2': 'I love experimenting with new techniques and constantly reinventing myself artistically. Whether <strong>spray paint, acrylic, or mixed media</strong> – for me, art is relaxation and a way to escape everyday life.',
-        'about-text-3': 'I\'m always excited to take on new projects and <strong>commissioned works</strong>, bringing creative ideas to life. I also enjoy traveling and attending various <strong>events</strong> to share my art and get inspired.',
-        'work-with-me': 'Work with me',
-        'sold': 'Sold'
-      }
-    };
-    
-    const t = translations[currentLang];
-    
-    // Update desktop navigation (skip home since it's now an icon)
-    const desktopArtworks = document.querySelector('a[href="/#artworks"]');
-    const desktopAbout = document.querySelector('a[href="/#about"]');
-    const desktopContact = document.querySelector('a[href="/#contact"]');
-    
-    if (desktopArtworks) desktopArtworks.textContent = t.artworks;
-    if (desktopAbout) desktopAbout.textContent = t.about;
-    if (desktopContact) desktopContact.textContent = t.contact;
-    
-    // Update mobile nav - find the specific text elements
-    const mobileHomeText = document.querySelector('.mobile-home-text');
-    const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-    
-    if (mobileHomeText) mobileHomeText.textContent = t.home;
-    
-    // Update other mobile links (skip the first one since it has the logo)
-    if (mobileLinks.length >= 4) {
-      // Find links by href to be more reliable
-      mobileLinks.forEach(link => {
-        if (link.getAttribute('href') === '/#artworks') {
-          link.textContent = t.artworks;
-        } else if (link.getAttribute('href') === '/#about') {
-          link.textContent = t.about;
-        } else if (link.getAttribute('href') === '/#contact') {
-          link.textContent = t.contact;
-        }
-      });
-    }
-    
-    // Update all elements with data-translate attributes
-    document.querySelectorAll('[data-translate]').forEach(el => {
-      const key = el.getAttribute('data-translate');
-      if (t[key]) {
-        if (key.includes('about-text') || key === 'work-with-me') {
-          el.innerHTML = t[key]; // Use innerHTML for HTML content
-        } else {
-          el.textContent = t[key]; // Use textContent for plain text
-        }
-      }
-    });
-  }
-  
-  // Mobile menu functions
+
+  // Mobile menu
   function closeMobileMenu() {
+    if (!mobileMenu || !mobileMenuButton) return;
     mobileMenu.classList.add('hidden');
+    mobileMenuButton.setAttribute('aria-expanded', 'false');
   }
-  
   function toggleMobileMenu() {
-    mobileMenu.classList.toggle('hidden');
+    if (!mobileMenu || !mobileMenuButton) return;
+    const isHidden = mobileMenu.classList.toggle('hidden');
+    mobileMenuButton.setAttribute('aria-expanded', String(!isHidden));
   }
-  
-  // Desktop language menu functions
+
+  // Desktop language menu
   function closeDesktopLangMenu() {
-    desktopLangMenu.classList.add('hidden');
+    if (desktopLangMenu) desktopLangMenu.classList.add('hidden');
   }
-  
   function toggleDesktopLangMenu() {
-    desktopLangMenu.classList.toggle('hidden');
+    if (desktopLangMenu) desktopLangMenu.classList.toggle('hidden');
   }
-  
+
   // Event listeners
-  mobileMenuButton.addEventListener('click', toggleMobileMenu);
-  
-  // Close mobile menu when clicking nav links
-  mobileNavLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      closeMobileMenu();
+  if (mobileMenuButton) mobileMenuButton.addEventListener('click', toggleMobileMenu);
+
+  mobileNavLinks.forEach((link) => link.addEventListener('click', closeMobileMenu));
+
+  if (desktopLangBtn) {
+    desktopLangBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleDesktopLangMenu();
     });
-  });
-  
-  // Desktop language switcher events
-  desktopLangBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    toggleDesktopLangMenu();
-  });
-  
-  desktopLangOptions.forEach(option => {
+  }
+
+  desktopLangOptions.forEach((option) => {
     option.addEventListener('click', (e) => {
       e.stopPropagation();
       changeLanguage(option.dataset.lang);
     });
   });
-  
-  // Mobile language switcher events
-  mobileLangOptions.forEach(option => {
-    option.addEventListener('click', () => {
-      changeLanguage(option.dataset.lang);
-    });
+
+  mobileLangOptions.forEach((option) => {
+    option.addEventListener('click', () => changeLanguage(option.dataset.lang));
   });
-  
-  // Close menus when clicking outside
+
+  // Menüs bei Klick außerhalb schließen
   document.addEventListener('click', (e) => {
-    if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+    const target = e.target;
+    if (mobileMenu && mobileMenuButton && !mobileMenu.contains(target) && !mobileMenuButton.contains(target)) {
       closeMobileMenu();
     }
-    if (!desktopLangMenu.contains(e.target) && !desktopLangBtn.contains(e.target)) {
+    if (desktopLangMenu && desktopLangBtn && !desktopLangMenu.contains(target) && !desktopLangBtn.contains(target)) {
       closeDesktopLangMenu();
     }
   });
-  
-  // Initialize
+
+  // ESC schließt offene Menüs
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeMobileMenu();
+      closeDesktopLangMenu();
+    }
+  });
+
+  // Init (Übersetzung selbst läuft zentral in Layout.astro)
   updateLanguageDisplay();
-  translatePage();
 });
 </script>
 

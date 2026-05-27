@@ -2,7 +2,9 @@
 // src/pages/artwork/[id].astro - Mobile spacing without borders
 import Layout from '../../layouts/Layout.astro';
 import Navigation from '../../components/Navigation.astro';
+import { Image, getImage } from 'astro:assets';
 import { getAllArtworks } from '../../data/series.js';
+import { getArtworkImage } from '../../utils/images.js';
 
 export function getStaticPaths() {
   const allArtworks = getAllArtworks();
@@ -13,9 +15,61 @@ export function getStaticPaths() {
 }
 
 const { artwork } = Astro.props;
+
+// Bild als optimiertes Asset auflösen (WebP) – für Anzeige UND schema.org-URL
+const artworkImage = getArtworkImage(artwork.image);
+const optimized = artworkImage
+  ? await getImage({ src: artworkImage, format: 'webp', quality: 80 })
+  : null;
+
+// schema.org: Werk als urheberrechtlich geschützt + lizenzierbar auszeichnen.
+// Google zeigt damit ein "Lizenzierbar"-Badge mit Link zurück zu dieser Seite/Kontakt –
+// die Bilder erscheinen also verlinkt und klar als NICHT frei verwendbar.
+const pageUrl = new URL(`/artwork/${artwork.id}`, Astro.site).href;
+const imageUrl = optimized ? new URL(optimized.src, Astro.site).href : pageUrl;
+const contactUrl = new URL('/#contact', Astro.site).href;
+const licenseUrl = new URL('/impressum', Astro.site).href;
+const creator = { '@type': 'Person', name: 'Jonathan Millinger', alternateName: 'JXX Design' };
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'VisualArtwork',
+  name: artwork.title,
+  url: pageUrl,
+  creator,
+  copyrightHolder: creator,
+  copyrightNotice: '© Jonathan Millinger / JXX Design. Alle Rechte vorbehalten.',
+  creditText: 'Jonathan Millinger / JXX Design',
+  artform: 'Pop Art / Graffiti',
+  ...(artwork.medium ? { artMedium: artwork.medium } : {}),
+  ...(artwork.year ? { dateCreated: String(artwork.year) } : {}),
+  image: {
+    '@type': 'ImageObject',
+    contentUrl: imageUrl,
+    url: imageUrl,
+    creator,
+    creditText: 'Jonathan Millinger / JXX Design',
+    copyrightNotice: '© Jonathan Millinger / JXX Design',
+    license: licenseUrl,
+    acquireLicensePage: contactUrl,
+  },
+  ...(!artwork.sold && artwork.price
+    ? {
+        offers: {
+          '@type': 'Offer',
+          price: String(artwork.price),
+          priceCurrency: 'EUR',
+          availability: 'https://schema.org/InStock',
+          url: pageUrl,
+        },
+      }
+    : {}),
+};
 ---
 
 <Layout title={`${artwork.title} - JXX Design`}>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+
   <Navigation />
   
   <!-- Artwork Detail Page -->
@@ -28,7 +82,7 @@ const { artwork } = Astro.props;
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
           </svg>
-          <span data-translate="back-to-gallery">Back to Gallery</span>
+          <span data-translate="back-to-gallery">Zurück zur Galerie</span>
         </a>
       </div>
       
@@ -37,10 +91,13 @@ const { artwork } = Astro.props;
         <!-- Artwork Image with Responsive Spacing -->
         <div class="space-y-4 sm:space-y-6 px-2 sm:px-0">
           <div class="bg-gray-50 rounded-2xl overflow-hidden">
-            <img 
-              src={artwork.image} 
-              alt={artwork.title}
+            <Image
+              src={artworkImage}
+              alt={`${artwork.title} – Pop-Art-Werk von Jonathan Millinger`}
               class="w-full h-auto object-cover"
+              format="webp"
+              quality={80}
+              loading="eager"
             />
           </div>
           
@@ -68,23 +125,29 @@ const { artwork } = Astro.props;
             </div>
             
             <div class="space-y-3 text-gray-600">
-              <div class="flex justify-between">
-                <span class="font-medium" data-translate="dimensions">Dimensions:</span>
-                <span>{artwork.dimensions}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="font-medium" data-translate="medium">Medium:</span>
-                <span>{artwork.medium}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="font-medium" data-translate="year">Year:</span>
-                <span>{artwork.year}</span>
-              </div>
+              {artwork.dimensions && (
+                <div class="flex justify-between">
+                  <span class="font-medium" data-translate="dimensions">Abmessungen:</span>
+                  <span>{artwork.dimensions}</span>
+                </div>
+              )}
+              {artwork.medium && (
+                <div class="flex justify-between">
+                  <span class="font-medium" data-translate="medium">Medium:</span>
+                  <span>{artwork.medium}</span>
+                </div>
+              )}
+              {artwork.year && (
+                <div class="flex justify-between">
+                  <span class="font-medium" data-translate="year">Jahr:</span>
+                  <span>{artwork.year}</span>
+                </div>
+              )}
             </div>
             
             {artwork.description && (
               <div class="border-t pt-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-3" data-translate="about-this-piece">About this piece</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-3" data-translate="about-this-piece">Über dieses Werk</h3>
                 <p class="text-gray-600 leading-relaxed">{artwork.description}</p>
               </div>
             )}
@@ -93,13 +156,15 @@ const { artwork } = Astro.props;
           <!-- Contact Section -->
           <div class="border-t pt-6 sm:pt-8">
             <div class="bg-gray-50 rounded-2xl p-4 sm:p-6 md:p-8 text-center space-y-6">
-              <h2 class="text-xl md:text-2xl font-bold text-gray-900 epilogue">
-                {artwork.sold ? 'Interested in Similar Work?' : 'Interested in this Artwork?'}
+              <h2 class="text-xl md:text-2xl font-bold text-gray-900 epilogue"
+                  data-translate={artwork.sold ? 'interested-in-similar' : 'interested-in-artwork'}>
+                {artwork.sold ? 'Interessiert an ähnlichen Werken?' : 'Interessiert an diesem Kunstwerk?'}
               </h2>
 
-              <p class="text-gray-600">
+              <p class="text-gray-600"
+                 data-translate={artwork.sold ? 'artwork-sold-desc' : 'artwork-available-desc'}>
                 {artwork.sold
-                  ? 'Dieses Werk wurde verkauft, aber ich habe ähnliche Arbeiten. Kontaktieren Sie mich für mehr Informationen.'
+                  ? 'Dieses Werk wurde verkauft, aber es gibt ähnliche Arbeiten. Schreiben Sie mir gerne.'
                   : 'Kontaktieren Sie mich für weitere Informationen zu diesem Kunstwerk, Preis und Verfügbarkeit.'
                 }
               </p>
@@ -107,25 +172,21 @@ const { artwork } = Astro.props;
               <!-- Email Button -->
               <a
                 href={`mailto:info@jxx-design.com?subject=Anfrage zu Artwork ${artwork.id} - ${artwork.title}&body=Hallo,%0D%0A%0D%0AIch interessiere mich für das Kunstwerk:%0D%0A- ID: ${artwork.id}%0D%0A- Titel: ${artwork.title}%0D%0A- Preis: €${artwork.price}%0D%0A%0D%0ABitte kontaktieren Sie mich für weitere Informationen.%0D%0A%0D%0AMit freundlichen Grüßen`}
-                class="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl epilogue min-h-[56px] text-lg"
+                class="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl epilogue min-h-[56px] text-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
               >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
-                <span>Per Email anfragen</span>
+                <span data-translate="send-inquiry">Per Email anfragen</span>
               </a>
 
               <p class="text-sm text-gray-500">
-                Der Klick öffnet Ihr Email-Programm mit vorausgefüllter Anfrage zu Artwork #{artwork.id}
+                <span data-translate="artwork-email-hint">Der Klick öffnet Ihr E-Mail-Programm mit vorausgefüllter Anfrage zu Artwork</span> #{artwork.id}
               </p>
-
-              <!-- Additional Info -->
-              <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100 text-left">
-                <p class="text-sm text-gray-700">
-                  <strong>Tipp:</strong> In der Email finden Sie bereits alle wichtigen Informationen zum Kunstwerk. Sie können Ihre Nachricht gerne personalisieren.
-                </p>
-              </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </main>
 </Layout>

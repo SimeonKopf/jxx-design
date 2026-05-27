@@ -1,5 +1,7 @@
 ---
 // src/components/About.astro - With working translation support
+import { Image } from 'astro:assets';
+import portrait from '../assets/portrait/jonathan-millinger-portrait.jpg';
 ---
 
 <section id="about" class="py-20 bg-gray-50">
@@ -10,17 +12,22 @@
         <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 epilogue" data-translate="about-title">
           Über mich
         </h2>
-        <div class="w-24 h-1 bg-gray-300 mx-auto"></div>
+        <div class="w-24 h-1 bg-gradient-to-r from-pink-500 to-blue-500 mx-auto rounded-full"></div>
       </div>
       
       <div class="grid md:grid-cols-2 gap-12 items-center">
         <!-- Artist image -->
         <div class="order-2 md:order-1">
           <div class="bg-white rounded-2xl p-4 shadow-lg">
-            <img 
-              src="/img/portrait_artist/IMG_0057.JPG" 
-              alt="JXX Design Artist" 
+            <Image
+              src={portrait}
+              alt="Jonathan Millinger – Pop-Art- und Graffiti-Künstler aus Süddeutschland"
               class="w-full h-auto rounded-xl object-cover"
+              format="webp"
+              quality={80}
+              loading="lazy"
+              widths={[400, 600, 800]}
+              sizes="(max-width: 768px) 90vw, 500px"
             />
           </div>
         </div>

@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import { getArtworkImage } from '../utils/images.js';
+
 export interface Props {
   series: {
     id: string;
@@ -28,16 +31,19 @@ const { series, imageLeft = false } = Astro.props;
             {series.artworks.map((artwork, index) => (
               <div class="desktop-slide flex-shrink-0 w-full relative group cursor-pointer" data-artwork-id={artwork.id}>
                 <a href={`/artwork/${artwork.id}`} class="block w-full h-full">
-                  <img 
-                    src={artwork.image} 
-                    alt={artwork.title}
+                  <Image
+                    src={getArtworkImage(artwork.image)}
+                    alt={`${artwork.title} – Pop-Art-Werk von Jonathan Millinger`}
                     class="w-full h-80 object-cover"
+                    format="webp"
+                    quality={80}
+                    loading="lazy"
                   />
                   <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent group-hover:from-black/10 transition-all duration-300"></div>
                 </a>
                 {artwork.sold && (
-                  <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
-                    Sold
+                  <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm" data-translate="sold">
+                    Verkauft
                   </div>
                 )}
               </div>
@@ -46,12 +52,12 @@ const { series, imageLeft = false } = Astro.props;
           
           {series.artworks.length > 1 && (
             <>
-              <button class="desktop-prev absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-2 shadow-md z-10">
+              <button class="desktop-prev absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-2 shadow-md z-10" aria-label="Vorheriges Bild">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
               </button>
-              <button class="desktop-next absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-2 shadow-md z-10">
+              <button class="desktop-next absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-2 shadow-md z-10" aria-label="Nächstes Bild">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
@@ -89,7 +95,7 @@ const { series, imageLeft = false } = Astro.props;
                   <div class="text-base font-medium text-gray-900 epilogue">€{artwork.price}</div>
                 )}
                 {artwork.sold && (
-                  <div class="text-base font-medium text-gray-900 epilogue">Sold</div>
+                  <div class="text-base font-medium text-gray-900 epilogue" data-translate="sold">Verkauft</div>
                 )}
               </div>
             </div>
@@ -113,15 +119,18 @@ const { series, imageLeft = false } = Astro.props;
             <div class="swiper-track flex" style="transform: translateX(0%); transition: none;">
               {series.artworks.map((artwork, index) => (
                 <div class="swiper-slide w-full flex-shrink-0" data-index={index}>
-                  <img
-                    src={artwork.image}
-                    alt={artwork.title}
+                  <Image
+                    src={getArtworkImage(artwork.image)}
+                    alt={`${artwork.title} – Pop-Art-Werk von Jonathan Millinger`}
                     class="w-full h-64 sm:h-72 md:h-80 object-cover select-none"
+                    format="webp"
+                    quality={80}
+                    loading="lazy"
                     draggable="false"
                   />
                   {artwork.sold && (
-                    <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
-                      Sold
+                    <div class="absolute top-3 right-3 bg-white text-gray-900 px-2 py-1 rounded-md text-xs font-medium shadow-sm" data-translate="sold">
+                      Verkauft
                     </div>
                   )}
                 </div>
@@ -130,12 +139,12 @@ const { series, imageLeft = false } = Astro.props;
             
             {series.artworks.length > 1 && (
               <>
-                <button class="swiper-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-3 shadow-md z-20 min-w-[44px] min-h-[44px] flex items-center justify-center transition-all duration-200">
+                <button class="swiper-prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-3 shadow-md z-20 min-w-[44px] min-h-[44px] flex items-center justify-center transition-all duration-200" aria-label="Vorheriges Bild">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                   </svg>
                 </button>
-                <button class="swiper-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-3 shadow-md z-20 min-w-[44px] min-h-[44px] flex items-center justify-center transition-all duration-200">
+                <button class="swiper-next absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 rounded-full p-3 shadow-md z-20 min-w-[44px] min-h-[44px] flex items-center justify-center transition-all duration-200" aria-label="Nächstes Bild">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
@@ -173,7 +182,7 @@ const { series, imageLeft = false } = Astro.props;
                     <div class="text-sm font-medium text-gray-900">€{artwork.price}</div>
                   )}
                   {artwork.sold && (
-                    <div class="text-sm font-medium text-gray-900">Sold</div>
+                    <div class="text-sm font-medium text-gray-900" data-translate="sold">Verkauft</div>
                   )}
                 </div>
               </a>
